@@ -1,0 +1,32 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="../home">Baseball Players Database</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+
+
+
+
+            {% for crud_op in util.CRUD_OPERATIONS %}
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    {{ crud_op.title() }}
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    {% for table, plaintext in util.TABLE_NAME_MAPPINGS.items() %}
+                    <a class="dropdown-item" href="../{{ crud_op }}/{{ table }}">{{ plaintext }}</a>
+                    {% endfor %}
+                </div>
+            </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+
+    <!-- {{ util.convert_to_table_name('Player Stats') }} -->
+</nav>

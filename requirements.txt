@@ -1,0 +1,10 @@
+pandas
+matplotlib
+numpy
+
+flask
+flask-sqlalchemy
+flask-bootstrap
+flask-Migrate
+
+sqlalchemy 

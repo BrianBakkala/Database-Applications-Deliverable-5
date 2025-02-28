@@ -1,0 +1,3 @@
+python .\run.py
+
+sass --watch ./resources/css:./static/css

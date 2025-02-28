@@ -1,0 +1,93 @@
+{% extends "crud_base.html" %}
+
+{% block crud %}
+
+<!-- {% print(columns_data) %} -->
+
+
+
+
+<form>
+
+
+
+
+    {% for col_name, col_data in columns_data.items() %}
+    {% set readable_column_name = util.convert_snake_case_to_readable(col_name) %}
+    <div class="form-row">
+        <div class="form-group col-md-3">
+            <label for="input_{{ col_name }}"> {{ readable_column_name }}</label>
+
+            {% if col_data['foreign_keys']|length > 0 %}
+            <select id="input_{{ col_name }}" class="form-control">
+                <option selected>Choose {{ readable_column_name }}...</option>
+                {% for refs in col_data['foreign_keys'].values() %}
+                {% for fk in refs %}
+                <option value="{{ fk[0] }}">({{ fk[0] }}) {{fk[1:]|join(" ") }}</option>
+                {% endfor %}
+                {% endfor %}
+            </select>
+            {% elif col_data['type'] == 'int' %}
+            <input type="number" class="form-control" id="input_{{ col_name }}" placeholder="Enter number" min="0">
+            {% elif col_data['type'] == 'date' %}
+            <input type="date" class="form-control" id="input_{{ col_name }}">
+            {% elif col_data['type'] == 'text' %}
+            <textarea class="form-control" id="input_{{ col_name }}" placeholder="Enter text" rows="3"></textarea>
+            {% else %}
+            <input type="text" class="form-control" id="input_{{ col_name }}" placeholder="Enter value">
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+
+    <!-- 
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputEmail4">Email</label>
+            <input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="inputPassword4">Password</label>
+            <input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputAddress">Address</label>
+        <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+    </div>
+    <div class="form-group">
+        <label for="inputAddress2">Address 2</label>
+        <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+    </div>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="inputCity">City</label>
+            <input type="text" class="form-control" id="inputCity">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputState">State</label>
+            <select id="inputState" class="form-control">
+                <option selected>Choose...</option>
+                <option>...</option>
+            </select>
+        </div>
+        <div class="form-group col-md-2">
+            <label for="inputZip">Zip</label>
+            <input type="text" class="form-control" id="inputZip">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="gridCheck">
+            <label class="form-check-label" for="gridCheck">
+                Check me out
+            </label>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Sign in</button> -->
+</form>
+
+
+{% endblock %}

@@ -38,7 +38,11 @@ def home():
 @app.route("/read/<table>")
 def read(table):
     return render_template(
-        "crud_read.html", table_data=db.read(table), crud_op="read", table=table
+        "crud_read.html",
+        table_data=db.read(table),
+        crud_op="read",
+        table=table,
+        columns_data=db.get_columns_data(table),
     )
     pass
 
@@ -46,7 +50,11 @@ def read(table):
 @app.route("/create/<table>")
 def create(table):
     return render_template(
-        "crud_create.html", table_data=db.read(table), crud_op="create", table=table
+        "crud_create.html",
+        table_data=db.read(table),
+        crud_op="create",
+        table=table,
+        columns_data=db.get_columns_data(table),
     )
     pass
 

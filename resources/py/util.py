@@ -1,4 +1,3 @@
-CRUD_OPERATIONS = ["create", "read", "update", "delete"]
 TABLE_NAME_MAPPINGS = {
     "batting_statistics": "Batting Statistics",
     "games": "Games",
@@ -9,6 +8,18 @@ TABLE_NAME_MAPPINGS = {
     "teams": "Teams",
 }
 PLAIN_TO_TABLE_MAPPINGS = {v: k for k, v in TABLE_NAME_MAPPINGS.items()}
+
+CRUD_OPERATIONS_ICONS = {
+    "create": "database-fill-add",
+    "read": "eyeglasses",
+    "update": "pencil-square",
+    "delete": "trash3",
+}
+CRUD_OPERATIONS = CRUD_OPERATIONS_ICONS.keys()
+
+
+def get_crud_icon(operation):
+    return CRUD_OPERATIONS_ICONS.get(operation, "exclamation-triangle-fill")
 
 
 def convert_table_to_plaintext(table_name):

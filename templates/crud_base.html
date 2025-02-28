@@ -1,0 +1,14 @@
+{% extends "base_template.html" %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1> <i class="bi bi-{{ util.get_crud_icon(crud_op) }}"></i> {{ crud_op.title() }}: {{
+                util.convert_table_to_plaintext(table) }}</h1>
+            {% block crud %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

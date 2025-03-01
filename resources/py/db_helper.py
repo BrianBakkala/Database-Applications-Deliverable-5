@@ -18,13 +18,14 @@ class DBHelper:
 
     def get_columns_data(self, table):
 
-        def process_columns_data(table_name, records, num_columns=3):
+        def process_columns_data(table_name, records, num_columns=2):
             # process returned data
             columns_data = {}
 
             for record in records:
                 column_name = record["Field"]
                 key_type = record["Key"]
+                column_extra = record["Extra"]
 
                 # grab type
                 # # # # # # # # # # # # # # # # # # # # # # #
@@ -63,6 +64,7 @@ class DBHelper:
                 columns_data[column_name] = {
                     "type": column_type,
                     "name": column_name,
+                    "extra": column_extra,
                     "foreign_keys": fk_data,
                     "key_type": fk_data,
                 }
@@ -73,6 +75,10 @@ class DBHelper:
             f"SHOW COLUMNS FROM {table};",
             callback=lambda records: process_columns_data(table, records),
         )
+
+    ######
+    # CRUD OPERATIONS
+    ######
 
     # read records from given table
     def read(self, table):
@@ -85,14 +91,11 @@ class DBHelper:
         values = ", ".join(["%s"] * len(data))
 
         query = f"INSERT INTO {table} ({columns}) VALUES ({values});"
-
         return self.run_query(query, data)
 
-    def close_connection(self):
-        """Close the database connection if open."""
-        if self.connection.is_connected():
-            self.connection.close()
-            print("Database connection closed.")
+    ######
+    # BIG BOI FUNCTIONS
+    ######
 
     def run_query(self, query, query_params=None, callback=None):
         """
@@ -119,3 +122,9 @@ class DBHelper:
         finally:
             self.connection.commit()
             cursor.close()
+
+    def close_connection(self):
+        """Close the database connection if open."""
+        if self.connection.is_connected():
+            self.connection.close()
+            print("Database connection closed.")

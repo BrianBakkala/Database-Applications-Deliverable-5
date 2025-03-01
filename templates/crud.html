@@ -1,0 +1,114 @@
+{% extends "base_template.html" %}
+
+{% block main %}
+<div class="container mb-5">
+    <form onsubmit='submitCreate("{{ table }}"); return false;'>
+        <div class="row">
+            <div class="col-lg-12">
+                <h1> CRUD: {{
+                    util.convert_table_to_plaintext(table) }}</h1>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                {% for column in columns_data.keys() %}
+                                <th scope="col">{{ util.convert_snake_case_to_readable(column) }}</th>
+
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in table_data %}
+                            <tr>
+                                {% for column in columns_data.keys() %}
+                                <td>
+                                    
+                                    
+                                    {{ row[column] }}
+                                
+                                
+                                
+                                </td>
+                                {% endfor %}
+
+
+                                <td>Edit</td>
+                                <td>Delete</td>
+                            </tr>
+                            {% endfor %}
+
+                            <tr id='add-row-template' hidden>
+
+                                {% for col_name, col_data in columns_data.items() %}
+                                {% set readable_column_name = util.convert_snake_case_to_readable(col_name) %}
+
+                                <td>
+
+                                    {% if col_data['extra'] == 'auto_increment' %}
+                                    <!--check if column is auto_increment -->
+                                    <span>(auto)</span>
+                                    {% elif col_data['foreign_keys']|length > 0 %}
+                                    <!--check if column has foreign keys -->
+                                    <select name="{{ col_name }}" id="input_{{ col_name }}" class="form-control"
+                                        required>
+                                        <option selected disabled value="">Choose {{ readable_column_name }}...
+                                        </option>
+                                        {% for refs in col_data['foreign_keys'].values() %}
+                                        {% for fk in refs %}
+                                        <option value="{{ fk[0] }}">({{ fk[0] }}) {{fk[1:]|join(" ") }}</option>
+                                        {% endfor %}
+                                        {% endfor %}
+                                    </select>
+
+                                    <!--otherwise, get type and use appropriate form eleemnt -->
+                                    {% elif col_data['type'] == 'int' %}
+                                    <input type="number" e="{{ col_data['extra'] }}" name="{{ col_name }}"
+                                        class="form-control" id="input_{{ col_name }}"
+                                        placeholder="{{ readable_column_name }}" min="0" required>
+                                    {% elif col_data['type'] == 'date' %}
+                                    <input type="date" name="{{ col_name }}" class="form-control"
+                                        id="input_{{ col_name }}" required>
+                                    {% else %}
+                                    <input type="text" name="{{ col_name }}" class="form-control"
+                                        id="input_{{ col_name }}" placeholder="{{ readable_column_name }}" required>
+                                    {% endif %}
+
+                                </td>
+
+                                {% endfor %}
+
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="button-group col-lg-12">
+                <button type='submit' class='btn btn-primary' id='save-row' hidden>
+                    <i class='bi bi-save'></i>
+                    <span>Save</span>
+                </button>
+                <button type='button' class='btn btn-secondary' id='cancel-edit' hidden onclick='toggleCreateMode()'>
+                    <i class='bi bi-x-lg'></i>
+                    <span>Cancel</span>
+                </button>
+                <button type='button' class='btn btn-secondary' id='add-row' onclick='toggleCreateMode()'>
+                    <i class='bi bi-plus-circle'></i>
+                    <span>Add row</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="../static/css/crud.css">
+{% endblock %}
+
+{% block scripts %}
+<script src="../static/js/crud.js"></script>
+{% endblock %}

@@ -10,11 +10,12 @@ TABLE_NAME_MAPPINGS = {
 PLAIN_TO_TABLE_MAPPINGS = {v: k for k, v in TABLE_NAME_MAPPINGS.items()}
 
 CRUD_OPERATIONS_ICONS = {
-    "create": "database-fill-add",
+    "create": "plus-lg",
     "read": "eyeglasses",
     "update": "pencil-square",
     "delete": "trash3",
 }
+
 CRUD_OPERATIONS = CRUD_OPERATIONS_ICONS.keys()
 
 

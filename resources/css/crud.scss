@@ -1,0 +1,19 @@
+form label {
+    font-weight: bold;
+}
+
+[hidden] {
+    display: none;
+}
+
+
+table tr:not(#add-row-template) {
+
+    &:hover {
+        background-color: rgb(228, 251, 255);
+    }
+
+    &.highlight {
+        background-color: rgb(255, 250, 175);
+    }
+}

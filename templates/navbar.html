@@ -11,19 +11,17 @@
 
 
 
-            {% for crud_op in util.CRUD_OPERATIONS %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
-                    {{ crud_op.title() }}
+                    CRUD Operations
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% for table, plaintext in util.TABLE_NAME_MAPPINGS.items() %}
-                    <a class="dropdown-item" href="../{{ crud_op }}/{{ table }}">{{ plaintext }}</a>
+                    <a class="dropdown-item" href="../crud/{{ table }}">{{ plaintext }}</a>
                     {% endfor %}
                 </div>
             </li>
-            {% endfor %}
 
         </ul>
     </div>

@@ -62,3 +62,35 @@ def test_read_success():
         assert result == [{"id": 1, "name": "John"}]
         mock_cursor.execute.assert_called_once_with("SELECT * FROM users;")
         mock_cursor.fetchall.assert_called_once()
+
+
+#  create method with a mocked connection
+def test_create_success():
+    mock_cursor = MagicMock()
+
+    with patch("mysql.connector.connect") as mock_connect:
+        # Mock the connection
+        mock_connection = MagicMock()
+        mock_connect.return_value = mock_connection
+
+        # Mock the cursor
+        mock_connection.cursor.return_value = mock_cursor
+
+        # Mock run_query method
+        mock_run_query = MagicMock()
+
+        db_helper = DBHelper("localhost", "user", "password", "test_db")
+        db_helper.run_query = mock_run_query  # Replace the method with a mock
+
+        # Test input
+        table = "users"
+        data = {"id": 1, "name": "John Doe", "email": "john@example.com"}
+
+        # Call the method
+        db_helper.create(table, data)
+
+        # Expected SQL Query
+        expected_query = "INSERT INTO users (id, name, email) VALUES (%s, %s, %s);"
+
+        # Assert `run_query` was called with the expected query and data
+        mock_run_query.assert_called_once_with(expected_query, data)

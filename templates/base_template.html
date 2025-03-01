@@ -14,10 +14,17 @@
     <!-- global css -->
     <link rel="stylesheet" href="../static/css/global.css">
 
+    {% block styles %}
+    {% endblock %}
+
     <title>Baseball Player Viewer - {% block title %}{% endblock %}</title>
+
+
+
+
 </head>
 
-<body>
+<body onload='if(typeof( onloadHandler())=="function") bodyOnload();'>
 
     {% include "navbar.html" %}
 
@@ -40,8 +47,13 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
 
+    <script src="../static/js/global.js"></script>
+
+
     {% block scripts %}
     {% endblock %}
 </body>
+
+
 
 </html>

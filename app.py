@@ -31,29 +31,11 @@ def home():
     pass
 
 
-# # # # # #
-# CRUD
-# # # # # #
-
-
-@app.route("/read/<table>")
-def render_read(table):
+@app.route("/crud/<table>")
+def render_crud(table):
     return render_template(
-        "crud_read.html",
+        "crud.html",
         table_data=db.read(table),
-        crud_op="read",
-        table=table,
-        columns_data=db.get_columns_data(table),
-    )
-    pass
-
-
-@app.route("/create/<table>")
-def render_create(table):
-    return render_template(
-        "crud_create.html",
-        table_data=db.read(table),
-        crud_op="create",
         table=table,
         columns_data=db.get_columns_data(table),
     )

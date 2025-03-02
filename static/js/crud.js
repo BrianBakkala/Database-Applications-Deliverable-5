@@ -1,4 +1,4 @@
-const NEWROW_PARAM = "newrow";
+const HIGHLIGHT_ROW_PARAM = "highlight_row";
 
 
 /////////////////////////
@@ -8,11 +8,10 @@ async function submitCreate(table)
 {
     await dbRequest('create',
         {
+            table,
             data: serializeForm(document.querySelector('form:has(#add-row-template)')),
-            table
-        });
-
-    window.location.href = window.location.href.split("?") + "?" + NEWROW_PARAM + "=true";
+        },
+        () => { window.location.href = window.location.href.split("?")[0].split(",")[0] + "?" + HIGHLIGHT_ROW_PARAM + "=last"; });
 }
 
 async function submitDelete(table, recordId)
@@ -21,40 +20,71 @@ async function submitDelete(table, recordId)
         {
             record_id: recordId,
             table
-        });
+        },
+        () => window.location.reload());
+
 }
 
 async function submitUpdate(clickedButton, table, recordId)
 {
+
+    if (recordId == "0")
+    {
+        const form = document.querySelector('form:has(#add-row-template)');
+        if (form.checkValidity())
+        {
+            submitCreate(table);
+        }
+        else
+        {
+            form.reportValidity(); // Shows validation messages
+        }
+
+        return;
+    }
+
     await dbRequest('update',
         {
-            data: serializeForm(clickedButton.getParentElement('form')),
             record_id: recordId,
-            table
-        });
+            table,
+            data: serializeForm(clickedButton.getParentElement('form')),
+        },
+        () => { window.location.href = window.location.href.split("?") + "?" + HIGHLIGHT_ROW_PARAM + "=" + recordId; }
+    );
 }
 
 function onloadHandler()
 {
     const urlParams = getUrlParams();
-    if (urlParams[NEWROW_PARAM])
+    if (urlParams[HIGHLIGHT_ROW_PARAM])
     {
-        newRowHandler();
+        highlightRow(urlParams[HIGHLIGHT_ROW_PARAM]);
     }
 }
 /**
  * handles the UX for a new row being added to the table
  *
  */
-function newRowHandler()
+function highlightRow(rowId)
 {
     //scroll to bottom
-    window.scrollTo(0, document.body.scrollHeight);
-    window.removeUrlParam(NEWROW_PARAM);
+    let cell;
+    if (rowId === 'last')
+    {
+        const rows = [...document.querySelectorAll('.custom-table-tbody .custom-table-tr:not(#add-row-template)')];
+        cell = rows[rows.length - 1].querySelector('.custom-table-td:not(.crud-ops-button-group)');
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+    else
+    {
+        cell = document.querySelector('#form_row_' + rowId + " .custom-table-tr .custom-table-td:not(.crud-ops-button-group)");
+    }
+    console.log("highlighting row", rowId);
+    console.log(cell);
+    window.removeUrlParam(HIGHLIGHT_ROW_PARAM);
 
     //highlight new row
-    const row = document.querySelector('tbody tr:nth-last-of-type(2)');
-    row.classList.add('highlight');
+    cell.classList.add('highlight');
 }
 
 /**
@@ -63,16 +93,16 @@ function newRowHandler()
  */
 function toggleCreateMode()
 {
-    const form = document.querySelector('form');
+    const form = document.querySelector('form:has(#add-row-template)');
     form.reset();
 
     //show appropriate buttons
     document.querySelector('#add-row-template').toggleAttribute('hidden');
-    [...document.querySelectorAll('.button-group button')].forEach(x => x.toggleAttribute('hidden'));
+    document.querySelector('.button-group').toggleAttribute('hidden');
+    document.querySelector('#add-row-template .crud-ops-button-group').toggleAttribute('invisible');
 
     //focus on first input
     document.querySelector('#add-row-template input').focus();
-    console.log(document.querySelector('#add-row-template input'));
 
     //scroll to bottom
     window.scrollTo(0, document.body.scrollHeight);
@@ -85,6 +115,13 @@ function toggleCreateMode()
  */
 function toggleEditMode(clickedButton)
 {
+    const form = clickedButton.getParentElement('form');
+    if (form.querySelector('#add-row-template'))
+    {
+        toggleCreateMode();
+        return;
+    }
+
     const parentForm = clickedButton.getParentElement('form');
     parentForm.toggleAttribute('edit-mode');
 }

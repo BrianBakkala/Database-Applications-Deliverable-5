@@ -1,3 +1,7 @@
+[data-lastpass-icon-root] {
+  display: none !important;
+}
+
 body {
   background-color: #f0f0f0;
   font-family: "Arial", sans-serif;
@@ -17,17 +21,16 @@ nav.navbar-dark {
   visibility: hidden;
 }
 
-div[class^=custom-table-][class$=tbody], div[class^=custom-table-][class$=thead] {
-  display: contents;
-}
-div[class^=custom-table-][class$=table] {
+.custom-table-table {
   display: grid;
   grid-template-columns: repeat(var(--num-columns), auto);
 }
-div[class^=custom-table-][class$=thead], div[class^=custom-table-][class$=tr] {
+.custom-table-table .custom-table-tbody,
+.custom-table-table .custom-table-thead,
+.custom-table-table .custom-table-tr {
   display: contents;
 }
-div[class^=custom-table-][class$=td] {
+.custom-table-table .custom-table-td {
   display: inline-flex;
   align-items: center;
 }

@@ -29,7 +29,7 @@ HTMLElement.prototype.getParentElement = function (selector)
  * @param {*} object the data to send in the request
  
  */
-async function dbRequest(command, object)
+async function dbRequest(command, object, callback)
 {
     return await fetch('/request/' + command, {
         method: "POST",
@@ -37,6 +37,24 @@ async function dbRequest(command, object)
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(object),
+    }).then(r =>
+    {
+
+        if (r.ok)
+        {
+            if (typeof (callback) === 'function')
+            {
+                return callback(r.json());
+            }
+            else
+            {
+                return r.json();
+            }
+        }
+        else
+        {
+            throw new Error('Failed to fetch');
+        }
     });
 }
 /**

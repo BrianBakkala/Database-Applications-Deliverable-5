@@ -1,3 +1,8 @@
+// lastpass extension fix
+[data-lastpass-icon-root] {
+    display: none !important;
+}
+
 body {
     background-color: #f0f0f0;
     font-family: 'Arial', sans-serif;
@@ -19,24 +24,18 @@ nav.navbar-dark {
 }
 
 
-div[class^="custom-table-"] {
+.custom-table-table {
 
-    &[class$="tbody"],
-    &[class$="thead"] {
+    display: grid;
+    grid-template-columns: repeat(var(--num-columns), auto);
+
+    .custom-table-tbody,
+    .custom-table-thead,
+    .custom-table-tr {
         display: contents;
     }
 
-    &[class$="table"] {
-        display: grid;
-        grid-template-columns: repeat(var(--num-columns), auto);
-    }
-
-    &[class$="thead"],
-    &[class$="tr"] {
-        display: contents;
-    }
-
-    &[class$="td"] {
+    .custom-table-td {
         display: inline-flex;
         align-items: center;
     }

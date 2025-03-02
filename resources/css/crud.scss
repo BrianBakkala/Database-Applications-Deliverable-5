@@ -17,7 +17,7 @@ div {
         }
     }
 
-    &[class$="thead"] {
+    &.custom-table-thead {
         .crud-ops-button-group {
             visibility: hidden;
         }
@@ -176,13 +176,13 @@ form {
     }
 }
 
-table tr:not(#add-row-template) {
+form:not([edit-mode]) .custom-table-tr:has(.custom-table-td:hover) .custom-table-td:not(.crud-ops-button-group) {
+    background-color: rgb(223, 219, 255);
+}
 
-    &:hover {
-        background-color: rgb(228, 251, 255);
-    }
 
+.custom-table-td {
     &.highlight {
-        background-color: rgb(255, 250, 175);
+        background-color: rgb(255, 250, 175) !important;
     }
 }

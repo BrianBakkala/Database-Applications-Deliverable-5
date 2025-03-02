@@ -69,14 +69,11 @@ def test_create_success():
     mock_cursor = MagicMock()
 
     with patch("mysql.connector.connect") as mock_connect:
-        # Mock the connection
         mock_connection = MagicMock()
         mock_connect.return_value = mock_connection
 
-        # Mock the cursor
         mock_connection.cursor.return_value = mock_cursor
 
-        # Mock run_query method
         mock_run_query = MagicMock()
 
         db_helper = DBHelper("localhost", "user", "password", "test_db")
@@ -86,11 +83,72 @@ def test_create_success():
         table = "users"
         data = {"id": 1, "name": "John Doe", "email": "john@example.com"}
 
-        # Call the method
+        # Call
         db_helper.create(table, data)
 
-        # Expected SQL Query
         expected_query = "INSERT INTO users (id, name, email) VALUES (%s, %s, %s);"
 
-        # Assert `run_query` was called with the expected query and data
         mock_run_query.assert_called_once_with(expected_query, data)
+
+
+def test_delete_success():
+    mock_cursor = MagicMock()
+
+    with patch("mysql.connector.connect") as mock_connect:
+        mock_connection = MagicMock()
+        mock_connect.return_value = mock_connection
+
+        mock_connection.cursor.return_value = mock_cursor
+
+        mock_run_query = MagicMock()
+        mock_get_pk = MagicMock(return_value="id")
+
+        db_helper = DBHelper("localhost", "user", "password", "test_db")
+        db_helper.run_query = mock_run_query  # Replace the method with a mock
+        db_helper.get_pk = mock_get_pk  # Mock the get_pk method
+
+        # Test input
+        table = "users"
+        record_id = 1
+
+        # Call
+        db_helper.delete(table, record_id)
+
+        expected_query = "DELETE FROM users WHERE id = 1;"
+
+        mock_get_pk.assert_called_once_with(table)
+        mock_run_query.assert_called_once_with(expected_query)
+
+
+from unittest.mock import patch, MagicMock
+
+
+def test_update_success():
+    mock_cursor = MagicMock()
+
+    with patch("mysql.connector.connect") as mock_connect:
+        mock_connection = MagicMock()
+        mock_connect.return_value = mock_connection
+
+        mock_connection.cursor.return_value = mock_cursor
+
+        mock_run_query = MagicMock()
+        mock_get_pk = MagicMock(return_value="id")
+
+        db_helper = DBHelper("localhost", "user", "password", "test_db")
+        db_helper.run_query = mock_run_query  # Replace the method with a mock
+        db_helper.get_pk = mock_get_pk  # Mock the get_pk method
+
+        # Test input
+        table = "users"
+        record_id = 1
+        data = {"name": "John Doe", "email": "john.doe@example.com"}
+
+        # Call
+        db_helper.update(table, record_id, data)
+
+        expected_query = "UPDATE users SET name = %s, email = %s WHERE id = 1;"
+        expected_params = ("John Doe", "john.doe@example.com")
+
+        mock_get_pk.assert_called_once_with(table)
+        mock_run_query.assert_called_once_with(expected_query, query_params=data)

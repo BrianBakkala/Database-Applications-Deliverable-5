@@ -11,7 +11,7 @@ div[class^=custom-table-] {
 div[class^=custom-table-] form {
   display: contents;
 }
-div[class$=thead] .crud-ops-button-group {
+div.custom-table-thead .crud-ops-button-group {
   visibility: hidden;
 }
 div form [readonly] {
@@ -96,11 +96,12 @@ form[delete-mode] .delete-button-group i.bi:not(.main-button) {
   display: initial;
 }
 
-table tr:not(#add-row-template):hover {
-  background-color: rgb(228, 251, 255);
+form:not([edit-mode]) .custom-table-tr:has(.custom-table-td:hover) .custom-table-td:not(.crud-ops-button-group) {
+  background-color: rgb(223, 219, 255);
 }
-table tr:not(#add-row-template).highlight {
-  background-color: rgb(255, 250, 175);
+
+.custom-table-td.highlight {
+  background-color: rgb(255, 250, 175) !important;
 }
 
 /*# sourceMappingURL=crud.css.map */

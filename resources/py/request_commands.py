@@ -6,4 +6,12 @@ db = DBHelper(host="localhost", user="root", password="", database="cs727_baseba
 
 
 def create(obj):
-    return db.create(obj["table"], obj["data"])
+    return db.create(table=obj["table"], data=obj["data"])
+
+
+def delete(obj):
+    return db.delete(table=obj["table"], record_id=obj["record_id"])
+
+
+def update(obj):
+    return db.update(table=obj["table"], record_id=obj["record_id"], data=obj["data"])

@@ -76,6 +76,11 @@ class DBHelper:
             callback=lambda records: process_columns_data(table, records),
         )
 
+    def get_pk(self, table):
+        return self.run_query(
+            f"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{table}' AND CONSTRAINT_NAME = 'PRIMARY';"
+        )[0]["COLUMN_NAME"]
+
     ######
     # CRUD OPERATIONS
     ######
@@ -92,6 +97,30 @@ class DBHelper:
 
         query = f"INSERT INTO {table} ({columns}) VALUES ({values});"
         return self.run_query(query, data)
+
+    # delete record in the given table
+    def delete(self, table, record_id):
+
+        # grab pkey column
+        primary_key_column = self.get_pk(table)
+
+        # delete record
+        query = f"DELETE FROM {table} WHERE {primary_key_column} = {record_id};"
+
+        return self.run_query(query)
+
+    # update record in the given table
+    def update(self, table, record_id, data):
+
+        # grab pkey column
+        primary_key_column = self.get_pk(table)
+
+        columns = ", ".join([f"{key} = %s" for key in data.keys()])
+        query = (
+            f"UPDATE {table} SET {columns} WHERE {primary_key_column} = {record_id};"
+        )
+
+        return self.run_query(query, query_params=data)
 
     ######
     # BIG BOI FUNCTIONS
@@ -118,7 +147,7 @@ class DBHelper:
 
         except Error as e:
             print(f"Error reading records: {e}")
-            return []
+            return [f"Error reading records: {e}", query, tuple(query_params.values())]
         finally:
             self.connection.commit()
             cursor.close()

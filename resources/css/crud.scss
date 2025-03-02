@@ -6,6 +6,172 @@ form label {
     display: none;
 }
 
+div {
+    * {
+        position: relative;
+    }
+
+    &[class^="custom-table-"] {
+
+        z-index: 0;
+
+
+        form {
+            display: contents;
+        }
+    }
+
+    &[class$="thead"] {
+        .crud-ops-button-group {
+            visibility: hidden;
+        }
+    }
+
+    form {
+
+        .crud-ops-button-group:hover,
+        &:has(:hover) .crud-ops-button-group {
+
+            i.bi.main-button {
+                opacity: 0.45;
+
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .edit-button-group,
+        .delete-button-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .crud-ops-button-group {
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+            align-items: center;
+            margin-right: 1rem;
+
+            i.bi {
+                cursor: pointer;
+
+                &.main-button {
+                    opacity: 0;
+
+                }
+            }
+        }
+    }
+
+
+}
+
+
+form {
+
+    .delete-button-group,
+    .edit-button-group {
+        i.bi.main-button {
+            display: initial;
+        }
+
+        i.bi:not(.main-button) {
+            display: none;
+        }
+    }
+
+    .confirm {
+        visibility: hidden;
+    }
+
+
+    &[delete-mode],
+    &[edit-mode] {
+        .confirm {
+            visibility: visible;
+        }
+    }
+
+    &:not([edit-mode]) {
+
+        .custom-table-td {
+
+            >input,
+            >select {
+                &:not([readonly]) {
+                    display: none;
+                }
+            }
+
+            [readonly] {
+                display: initial;
+            }
+        }
+
+    }
+
+    &[edit-mode] {
+        .custom-table-td {
+
+            >input,
+            >select {
+                &:not([readonly]) {
+                    display: initial;
+                }
+            }
+
+            [readonly] {
+                display: none;
+            }
+        }
+
+        .delete-button-group {
+            display: none;
+        }
+
+        .edit-button-group {
+
+            i.bi.main-button {
+                display: none;
+            }
+
+            i.bi:not(.main-button) {
+                display: initial;
+            }
+        }
+
+
+
+    }
+
+    &[delete-mode] {
+        [readonly] {
+            display: none;
+            color: red;
+            text-decoration: line-through;
+        }
+
+        .edit-button-group {
+            display: none;
+        }
+
+        .delete-button-group {
+
+            i.bi.main-button {
+                display: none;
+            }
+
+            i.bi:not(.main-button) {
+                display: initial;
+            }
+        }
+
+
+
+    }
+}
 
 table tr:not(#add-row-template) {
 

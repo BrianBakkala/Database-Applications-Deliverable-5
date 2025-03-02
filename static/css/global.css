@@ -9,4 +9,19 @@ nav.navbar-dark {
   color: white;
 }
 
+div[class^=custom-table-][class$=tbody], div[class^=custom-table-][class$=thead] {
+  display: contents;
+}
+div[class^=custom-table-][class$=table] {
+  display: grid;
+  grid-template-columns: repeat(var(--num-columns), auto);
+}
+div[class^=custom-table-][class$=thead], div[class^=custom-table-][class$=tr] {
+  display: contents;
+}
+div[class^=custom-table-][class$=td] {
+  display: inline-flex;
+  align-items: center;
+}
+
 /*# sourceMappingURL=global.css.map */

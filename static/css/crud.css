@@ -6,6 +6,95 @@ form label {
   display: none;
 }
 
+div * {
+  position: relative;
+}
+div[class^=custom-table-] {
+  z-index: 0;
+}
+div[class^=custom-table-] form {
+  display: contents;
+}
+div[class$=thead] .crud-ops-button-group {
+  visibility: hidden;
+}
+div form .crud-ops-button-group:hover i.bi.main-button, div form:has(:hover) .crud-ops-button-group i.bi.main-button {
+  opacity: 0.45;
+}
+div form .crud-ops-button-group:hover i.bi.main-button:hover, div form:has(:hover) .crud-ops-button-group i.bi.main-button:hover {
+  opacity: 1;
+}
+div form .edit-button-group,
+div form .delete-button-group {
+  display: flex;
+  gap: 1rem;
+}
+div form .crud-ops-button-group {
+  display: flex;
+  gap: 1rem;
+  z-index: 10;
+  align-items: center;
+  margin-right: 1rem;
+}
+div form .crud-ops-button-group i.bi {
+  cursor: pointer;
+}
+div form .crud-ops-button-group i.bi.main-button {
+  opacity: 0;
+}
+
+form .delete-button-group i.bi.main-button,
+form .edit-button-group i.bi.main-button {
+  display: initial;
+}
+form .delete-button-group i.bi:not(.main-button),
+form .edit-button-group i.bi:not(.main-button) {
+  display: none;
+}
+form .confirm {
+  visibility: hidden;
+}
+form[delete-mode] .confirm, form[edit-mode] .confirm {
+  visibility: visible;
+}
+form:not([edit-mode]) .custom-table-td > input:not([readonly]),
+form:not([edit-mode]) .custom-table-td > select:not([readonly]) {
+  display: none;
+}
+form:not([edit-mode]) .custom-table-td [readonly] {
+  display: initial;
+}
+form[edit-mode] .custom-table-td > input:not([readonly]),
+form[edit-mode] .custom-table-td > select:not([readonly]) {
+  display: initial;
+}
+form[edit-mode] .custom-table-td [readonly] {
+  display: none;
+}
+form[edit-mode] .delete-button-group {
+  display: none;
+}
+form[edit-mode] .edit-button-group i.bi.main-button {
+  display: none;
+}
+form[edit-mode] .edit-button-group i.bi:not(.main-button) {
+  display: initial;
+}
+form[delete-mode] [readonly] {
+  display: none;
+  color: red;
+  text-decoration: line-through;
+}
+form[delete-mode] .edit-button-group {
+  display: none;
+}
+form[delete-mode] .delete-button-group i.bi.main-button {
+  display: none;
+}
+form[delete-mode] .delete-button-group i.bi:not(.main-button) {
+  display: initial;
+}
+
 table tr:not(#add-row-template):hover {
   background-color: rgb(228, 251, 255);
 }

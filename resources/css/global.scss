@@ -8,3 +8,29 @@ body {
 nav.navbar-dark {
     color: white;
 }
+
+
+
+div[class^="custom-table-"] {
+
+    &[class$="tbody"],
+    &[class$="thead"] {
+        display: contents;
+    }
+
+    &[class$="table"] {
+        display: grid;
+        grid-template-columns: repeat(var(--num-columns), auto);
+    }
+
+    &[class$="thead"],
+    &[class$="tr"] {
+        display: contents;
+    }
+
+    &[class$="td"] {
+        display: inline-flex;
+        align-items: center;
+    }
+
+}

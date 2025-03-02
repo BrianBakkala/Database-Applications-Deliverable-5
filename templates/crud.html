@@ -1,107 +1,165 @@
 {% extends "base_template.html" %}
 
+
+{% macro editDeleteButtons() -%}
+<div class='custom-table-td crud-ops-button-group'>
+    <div class='confirm'>Confirm?</div>
+
+    <div class='edit-button-group'>
+        <i class="bi bi-pencil-square main-button" style='color:slategray' onclick='toggleEditMode(this)'></i>
+
+        <i class="bi bi-save" style='color:green' onclick='confirmEdit(this)'></i>
+        <i class="bi bi-x-lg" style='color:red' onclick='toggleEditMode(this)'></i>
+    </div>
+    <div class='delete-button-group'>
+        <i class="bi bi-trash3 main-button" style='color:red' onclick='toggleDeleteMode(this)'></i>
+
+        <i class="bi bi-trash3" style='color:green' onclick='confirmDelete(this)'></i>
+        <i class="bi bi-x-lg" style='color:red' onclick='toggleDeleteMode(this)'></i>
+    </div>
+</div>
+{%- endmacro %}
+
+{% macro inputRow(entry_value, col_data) -%}
+
+{% if col_data['extra'] == 'auto_increment' %}
+<!--check if column is auto_increment -->
+<span>{{ entry_value }}</span>
+{% elif col_data['foreign_keys']|length > 0 %}
+<!--check if column has foreign keys -->
+<select name="{{ col_name }}" id="input_{{ col_name }}" class="form-control" required>
+
+
+    {% for refs in col_data['foreign_keys'].values() %}
+    {% for fk in refs %}
+
+    {% if fk[0] == entry_value %}
+    <option value="{{ fk[0] }}" selected>
+        {% else %}
+    <option value="{{ fk[0] }}">
+        {% endif %}
+
+        ({{ fk[0] }}) {{fk[1:]|join(" ") }}
+
+    </option>
+
+    {% endfor %}
+    {% endfor %}
+</select>
+
+<select disabled readonly class="form-control" value="{{ entry_value }}">
+
+    {% for refs in col_data['foreign_keys'].values() %}
+    {% for fk in refs %}
+
+    {% if fk[0] == entry_value %}
+    <option value="{{ fk[0] }}" selected> ({{ fk[0] }}) {{fk[1:]|join(" ") }} </option>
+    {% endif %}
+
+    {% endfor %}
+    {% endfor %}
+
+</select>
+
+{% else %}
+<!--otherwise, get type and use appropriate form eleemnt -->
+{% if col_data['type'] == 'int' %}
+<input type="number" name="{{ col_name }}" class="form-control" value="{{ entry_value }}" id="input_{{ col_name }}"
+    placeholder="{{ readable_column_name }}" min="0" required />
+{% elif col_data['type'] == 'date' %}
+<input type="date" name="{{ col_name }}" value="{{ entry_value }}" class="form-control" id="input_{{ col_name }}"
+    required />
+
+{% else %}
+<input type="text" name="{{ col_name }}" value="{{ entry_value }}" class="form-control" id="input_{{ col_name }}"
+    placeholder="{{ readable_column_name }}" required />
+{% endif %}
+<input disabled readonly class="form-control" value="{{ entry_value }}" />
+{% endif %}
+
+
+{%- endmacro %}
+
+
+
 {% block main %}
 <div class="container mb-5">
-    <form onsubmit='submitCreate("{{ table }}"); return false;'>
-        <div class="row">
-            <div class="col-lg-12">
-                <h1> CRUD: {{
-                    util.convert_table_to_plaintext(table) }}</h1>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                {% for column in columns_data.keys() %}
-                                <th scope="col">{{ util.convert_snake_case_to_readable(column) }}</th>
+    <div class="row">
+        <div class="col-lg-12">
+            <h1> CRUD: {{ util.convert_table_to_plaintext(table) }}</h1>
 
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in table_data %}
-                            <tr>
-                                {% for column in columns_data.keys() %}
-                                <td>
-                                    
-                                    
-                                    {{ row[column] }}
-                                
-                                
-                                
-                                </td>
-                                {% endfor %}
+            <!--hack to get number of columns -->
+            {% set col_num_hack = 'style="--num-columns:' + (columns_data | length + 1) | string + ';"'
+            %}
 
+            <div class='custom-table-table' {{ col_num_hack | safe }}>
+                <div class='custom-table-thead'>
 
-                                <td>Edit</td>
-                                <td>Delete</td>
-                            </tr>
+                    <div class='custom-table-tr'>
+                        {{ editDeleteButtons( ) }}
+                        {% for column in columns_data.keys() %}
+                        <div class='custom-table-th' scope="col">
+                            {{ util.convert_snake_case_to_readable(column) }}
+                        </div>
+
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class='custom-table-tbody'>
+                    {% for row in table_data %}
+                    {% set row_id = table_data[columns_data.values()[0]] %}
+
+                    <form id='form_row_{{ row_id}}'>
+                        <div class='custom-table-tr'>
+                            {{ editDeleteButtons( ) }}
+                            {% for col_name, col_data in columns_data.items() %}
+                            {% set readable_column_name = util.convert_snake_case_to_readable(col_name) %}
+                            {% set entry_value = row[col_name] %}
+
+                            <div class='custom-table-td'>
+                                {{ inputRow(entry_value,col_data ) }}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </form>
+                    {% endfor %}
+
+                    <form onsubmit='submitCreate("{{ table }}"); return false;'>
+                        <div class='custom-table-tr' id='add-row-template' hidden>
+
+                            {% for col_name, col_data in columns_data.items() %}
+                            {% set readable_column_name = util.convert_snake_case_to_readable(col_name) %}
+
+                            <div class='custom-table-td'>
+                                {{ inputRow('', col_data) }}
+                            </div>
+
                             {% endfor %}
 
-                            <tr id='add-row-template' hidden>
 
-                                {% for col_name, col_data in columns_data.items() %}
-                                {% set readable_column_name = util.convert_snake_case_to_readable(col_name) %}
-
-                                <td>
-
-                                    {% if col_data['extra'] == 'auto_increment' %}
-                                    <!--check if column is auto_increment -->
-                                    <span>(auto)</span>
-                                    {% elif col_data['foreign_keys']|length > 0 %}
-                                    <!--check if column has foreign keys -->
-                                    <select name="{{ col_name }}" id="input_{{ col_name }}" class="form-control"
-                                        required>
-                                        <option selected disabled value="">Choose {{ readable_column_name }}...
-                                        </option>
-                                        {% for refs in col_data['foreign_keys'].values() %}
-                                        {% for fk in refs %}
-                                        <option value="{{ fk[0] }}">({{ fk[0] }}) {{fk[1:]|join(" ") }}</option>
-                                        {% endfor %}
-                                        {% endfor %}
-                                    </select>
-
-                                    <!--otherwise, get type and use appropriate form eleemnt -->
-                                    {% elif col_data['type'] == 'int' %}
-                                    <input type="number" e="{{ col_data['extra'] }}" name="{{ col_name }}"
-                                        class="form-control" id="input_{{ col_name }}"
-                                        placeholder="{{ readable_column_name }}" min="0" required>
-                                    {% elif col_data['type'] == 'date' %}
-                                    <input type="date" name="{{ col_name }}" class="form-control"
-                                        id="input_{{ col_name }}" required>
-                                    {% else %}
-                                    <input type="text" name="{{ col_name }}" class="form-control"
-                                        id="input_{{ col_name }}" placeholder="{{ readable_column_name }}" required>
-                                    {% endif %}
-
-                                </td>
-
-                                {% endfor %}
-
-
-                            </tr>
-
-                        </tbody>
-                    </table>
+                    </form>
                 </div>
+
             </div>
         </div>
-        <div class="row">
-            <div class="button-group col-lg-12">
-                <button type='submit' class='btn btn-primary' id='save-row' hidden>
-                    <i class='bi bi-save'></i>
-                    <span>Save</span>
-                </button>
-                <button type='button' class='btn btn-secondary' id='cancel-edit' hidden onclick='toggleCreateMode()'>
-                    <i class='bi bi-x-lg'></i>
-                    <span>Cancel</span>
-                </button>
-                <button type='button' class='btn btn-secondary' id='add-row' onclick='toggleCreateMode()'>
-                    <i class='bi bi-plus-circle'></i>
-                    <span>Add row</span>
-                </button>
-            </div>
-        </div>
-    </form>
+    </div>
+</div>
+<div class="row">
+    <div class="button-group col-lg-12">
+        <button type='submit' class='btn btn-primary' id='save-row' hidden>
+            <i class='bi bi-save'></i>
+            <span>Save</span>
+        </button>
+        <button type='button' class='btn btn-secondary' id='cancel-edit' hidden onclick='toggleCreateMode()'>
+            <i class='bi bi-x-lg'></i>
+            <span>Cancel</span>
+        </button>
+        <button type='button' class='btn btn-secondary' id='add-row' onclick='toggleCreateMode()'>
+            <i class='bi bi-plus-circle'></i>
+            <span>Add row</span>
+        </button>
+    </div>
+</div>
 </div>
 {% endblock %}
 

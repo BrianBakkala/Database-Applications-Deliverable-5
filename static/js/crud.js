@@ -1,16 +1,37 @@
 const NEWROW_PARAM = "newrow";
 
 
-
+/////////////////////////
+//////////CRUD OPERATIONS
+/////////////////////////
 async function submitCreate(table)
 {
     await dbRequest('create',
         {
-            data: serializeForm(document.querySelector('form')),
+            data: serializeForm(document.querySelector('form:has(#add-row-template)')),
             table
         });
 
     window.location.href = window.location.href.split("?") + "?" + NEWROW_PARAM + "=true";
+}
+
+async function submitDelete(table, recordId)
+{
+    await dbRequest('delete',
+        {
+            record_id: recordId,
+            table
+        });
+}
+
+async function submitUpdate(clickedButton, table, recordId)
+{
+    await dbRequest('update',
+        {
+            data: serializeForm(clickedButton.getParentElement('form')),
+            record_id: recordId,
+            table
+        });
 }
 
 function onloadHandler()
@@ -34,6 +55,27 @@ function newRowHandler()
     //highlight new row
     const row = document.querySelector('tbody tr:nth-last-of-type(2)');
     row.classList.add('highlight');
+}
+
+/**
+ * handles the UX for the edit button being clicked for a certain row
+ *
+ */
+function toggleCreateMode()
+{
+    const form = document.querySelector('form');
+    form.reset();
+
+    //show appropriate buttons
+    document.querySelector('#add-row-template').toggleAttribute('hidden');
+    [...document.querySelectorAll('.button-group button')].forEach(x => x.toggleAttribute('hidden'));
+
+    //focus on first input
+    document.querySelector('#add-row-template input').focus();
+    console.log(document.querySelector('#add-row-template input'));
+
+    //scroll to bottom
+    window.scrollTo(0, document.body.scrollHeight);
 }
 
 /**

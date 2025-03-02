@@ -1,20 +1,20 @@
 {% extends "base_template.html" %}
 
 
-{% macro editDeleteButtons() -%}
-<div class='custom-table-td crud-ops-button-group'>
+{% macro editDeleteButtons(record_id, attributes ) -%}
+<div class='custom-table-td crud-ops-button-group' {{ attributes }}>
     <div class='confirm'>Confirm?</div>
 
     <div class='edit-button-group'>
         <i class="bi bi-pencil-square main-button" style='color:slategray' onclick='toggleEditMode(this)'></i>
 
-        <i class="bi bi-save" style='color:green' onclick='confirmEdit(this)'></i>
+        <i class="bi bi-save" style='color:green' onclick='submitUpdate(this, "{{ table }}", "{{ record_id }}")'></i>
         <i class="bi bi-x-lg" style='color:red' onclick='toggleEditMode(this)'></i>
     </div>
     <div class='delete-button-group'>
         <i class="bi bi-trash3 main-button" style='color:red' onclick='toggleDeleteMode(this)'></i>
 
-        <i class="bi bi-trash3" style='color:green' onclick='confirmDelete(this)'></i>
+        <i class="bi bi-trash3" style='color:green' onclick='submitDelete("{{ table }}", "{{ record_id }}")'></i>
         <i class="bi bi-x-lg" style='color:red' onclick='toggleDeleteMode(this)'></i>
     </div>
 </div>
@@ -96,7 +96,7 @@
                 <div class='custom-table-thead'>
 
                     <div class='custom-table-tr'>
-                        {{ editDeleteButtons( ) }}
+                        {{ editDeleteButtons(0, "invisible") }}
                         {% for column in columns_data.keys() %}
                         <div class='custom-table-th' scope="col">
                             {{ util.convert_snake_case_to_readable(column) }}
@@ -111,7 +111,7 @@
 
                     <form id='form_row_{{ row_id}}'>
                         <div class='custom-table-tr'>
-                            {{ editDeleteButtons( ) }}
+                            {{ editDeleteButtons(row_id, "" ) }}
                             {% for col_name, col_data in columns_data.items() %}
                             {% set readable_column_name = util.convert_snake_case_to_readable(col_name) %}
                             {% set entry_value = row[col_name] %}
@@ -124,9 +124,9 @@
                     </form>
                     {% endfor %}
 
-                    <form onsubmit='submitCreate("{{ table }}"); return false;'>
+                    <form onsubmit='submitCreate("{{ table }}"); return false;' edit-mode>
                         <div class='custom-table-tr' id='add-row-template' hidden>
-
+                            {{ editDeleteButtons(0, "invisible") }}
                             {% for col_name, col_data in columns_data.items() %}
                             {% set readable_column_name = util.convert_snake_case_to_readable(col_name) %}
 

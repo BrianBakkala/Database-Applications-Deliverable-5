@@ -2,10 +2,6 @@ form label {
     font-weight: bold;
 }
 
-[hidden] {
-    display: none;
-}
-
 div {
     * {
         position: relative;
@@ -28,6 +24,12 @@ div {
     }
 
     form {
+
+        [readonly] {
+            background-color: transparent !important;
+            border-color: transparent !important;
+            appearance: none;
+        }
 
         .crud-ops-button-group:hover,
         &:has(:hover) .crud-ops-button-group {
@@ -90,7 +92,7 @@ form {
     &[delete-mode],
     &[edit-mode] {
         .confirm {
-            visibility: visible;
+            visibility: inherit;
         }
     }
 
@@ -109,6 +111,7 @@ form {
                 display: initial;
             }
         }
+
 
     }
 

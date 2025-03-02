@@ -2,10 +2,6 @@ form label {
   font-weight: bold;
 }
 
-[hidden] {
-  display: none;
-}
-
 div * {
   position: relative;
 }
@@ -17,6 +13,11 @@ div[class^=custom-table-] form {
 }
 div[class$=thead] .crud-ops-button-group {
   visibility: hidden;
+}
+div form [readonly] {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  appearance: none;
 }
 div form .crud-ops-button-group:hover i.bi.main-button, div form:has(:hover) .crud-ops-button-group i.bi.main-button {
   opacity: 0.45;
@@ -55,7 +56,7 @@ form .confirm {
   visibility: hidden;
 }
 form[delete-mode] .confirm, form[edit-mode] .confirm {
-  visibility: visible;
+  visibility: inherit;
 }
 form:not([edit-mode]) .custom-table-td > input:not([readonly]),
 form:not([edit-mode]) .custom-table-td > select:not([readonly]) {

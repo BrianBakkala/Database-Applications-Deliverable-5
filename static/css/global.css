@@ -9,6 +9,14 @@ nav.navbar-dark {
   color: white;
 }
 
+[hidden] {
+  display: none;
+}
+
+[invisible] {
+  visibility: hidden;
+}
+
 div[class^=custom-table-][class$=tbody], div[class^=custom-table-][class$=thead] {
   display: contents;
 }

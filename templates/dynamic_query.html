@@ -2,7 +2,7 @@
 
 
 {% block header %}
-{{ biIcon(data["icon"]) }} {{data["name"] }}
+{{ icon(data["icon"]) }} {{data["name"] }}
 {% endblock %}
 
 
@@ -20,7 +20,7 @@
 
 <div class="container mb-4">
     <h5>Input</h5>
-    <form>
+    <form id="dynamic_query_form">
         {{ inputForColumn(column_data, false, "handleInput(this, '" + mapping_key + "')") }}
     </form>
 </div>

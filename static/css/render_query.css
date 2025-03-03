@@ -7,4 +7,9 @@ codeblock .input-value {
   padding-inline: 0.25rem;
 }
 
+#dynamic_query_form input {
+  display: initial !important;
+  width: initial !important;
+}
+
 /*# sourceMappingURL=render_query.css.map */

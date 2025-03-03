@@ -78,5 +78,30 @@ codeblock {
         background-color: rgb(216, 211, 255);
     }
 
+    &[readonly] {
+        counter-reset: rowcount;
+        position: relative;
+
+        .custom-table-tbody {
+
+            .custom-table-td:first-of-type::before {
+                counter-increment: rowcount;
+                content: counter(rowcount);
+
+                font-style: italic;
+                color: gray;
+                font-size: .85rem;
+
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+
+                position: absolute;
+
+                width: 100px;
+                left: calc(-100px - .5rem);
+            }
+        }
+    }
 
 }

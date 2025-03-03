@@ -24,7 +24,7 @@ def dynamic_query(obj):
         query,
         {"input": obj["input"]},
     )
-    return util.render_template_string_with_components_context(
+    html = util.render_template_string_with_components_context(
         """
         
         {{ readOnlyTable(display_data) }}
@@ -32,4 +32,6 @@ def dynamic_query(obj):
         display_data=db.prep_query_for_display(
             query=query, query_params={"input": obj["input"]}
         ),
-    )
+    )["html"]
+
+    return {"result": result, "input": input, "html": html}

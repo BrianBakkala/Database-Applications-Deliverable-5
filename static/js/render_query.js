@@ -1,18 +1,22 @@
 function handleInput(element, mappingKey)
 {
-    runDynamicQuery(element.value, mappingKey);
+    const convertToNumberIfPossible = (value) => isNaN(Number(value)) ? value : Number(value);
+
+    runDynamicQuery(convertToNumberIfPossible(element.value), mappingKey)
+        .then(r => document.getElementById('dynamic_query_result').innerHTML = r.html)
+        // .then(r => console.log(r))
+        .catch(e => document.getElementById('dynamic_query_result').innerHTML = 'No results.');
 }
 
 async function runDynamicQuery(input, mappingKey)
 {
-    await dbRequest('dynamic_query',
+    return await dbRequest('dynamic_query',
         {
             mapping_key: mappingKey,
             input
         }
         , (response) =>
         {
-            document.getElementById('dynamic_query_result').innerHTML = response.html;
             const codeblock = document.querySelector('codeblock');
             const inputValueText = document.querySelector('.input-value');
             if (!inputValueText)
@@ -23,6 +27,8 @@ async function runDynamicQuery(input, mappingKey)
             {
                 inputValueText.innerHTML = input;
             }
+
+            return response;
 
         });
 }

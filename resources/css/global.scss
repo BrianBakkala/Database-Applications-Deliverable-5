@@ -9,6 +9,10 @@ body {
     margin: 0;
     padding: 0;
 
+    error {
+        color: red;
+    }
+
     h1 {
         margin-block: 1rem;
     }
@@ -36,6 +40,7 @@ codeblock {
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 0.25rem;
+    box-shadow: 1px 1px 12px #bebebe;
 }
 
 

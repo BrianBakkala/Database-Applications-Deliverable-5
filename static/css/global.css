@@ -8,6 +8,9 @@ body {
   margin: 0;
   padding: 0;
 }
+body error {
+  color: red;
+}
 body h1 {
   margin-block: 1rem;
 }
@@ -33,6 +36,7 @@ codeblock {
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 0.25rem;
+  box-shadow: 1px 1px 12px #bebebe;
 }
 
 .custom-table-table {

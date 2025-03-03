@@ -40,7 +40,38 @@ QUERY_MAPPINGS = {
         "query_type": "dynamic",
         "query": "SELECT player_id, first_name, last_name \r\nFROM players \r\nWHERE player_id IN (SELECT player_id FROM batting_statistics WHERE home_runs > ?);",
         "column": "batting_statistics.home_runs",
-        "description": "desv.",
+        "description": "This query finds power hitters who have hit more home runs than the given threshold in a season.",
+    },
+    "no_games_played": {
+        "category": "set_membership",
+        "name": "No Games Played",
+        "icon": "bi-x-lg",
+        "query_type": "static",
+        "query": "SELECT player_id, first_name, last_name \r\nFROM players \r\nWHERE player_id NOT IN (SELECT DISTINCT player_id FROM batting_statistics);",
+        "description": "This finds players who exist in the players table but never recorded any batting stats.",
+    },
+    #
+    #
+    #
+    # subqueries using with
+    #
+    "rbi_leaders": {
+        "category": "subqueries_using_'WITH'",
+        "name": "RBI Leaders",
+        "icon": "fa-up-long",
+        "query_type": "dynamic",
+        "query": "WITH RBIleaders AS (\r\n    SELECT player_id, SUM(rbi) AS total_rbi \r\n    FROM batting_statistics \r\n    WHERE season_id = 2 \r\n    GROUP BY player_id\r\n)\r\nSELECT p.player_id, p.first_name, p.last_name, rbil.total_rbi \r\nFROM players p\r\nJOIN RBIleaders rbil ON p.player_id = rbil.player_id\r\nORDER BY rbil.total_rbi DESC\r\nLIMIT ?;",
+        "column": "batting_statistics.rbi",  # not really, just an integer
+        "description": "This query finds the top n power hitters in terms of RBIs in a season.",
+    },
+    "total_season_hrs": {
+        "category": "subqueries_using_'WITH'",
+        "name": "Total HRs per team per season",
+        "icon": "bi-123",
+        "query_type": "dynamic",
+        "query": "WITH TeamHomeRuns AS (\r\n    SELECT team_id, SUM(home_runs) AS total_home_runs \r\n    FROM batting_statistics \r\n    INNER JOIN players\r\n    \tON players.player_id = batting_statistics.player_id\r\n    WHERE season_id = ? \r\n    GROUP BY team_id\r\n)\r\nSELECT t.team_name, thr.total_home_runs \r\nFROM teams t\r\nJOIN TeamHomeRuns thr ON t.team_id = thr.team_id\r\nORDER BY thr.total_home_runs DESC",
+        "column": "seasons.season_id",
+        "description": "This ranks teams by total home runs in a given season.",
     },
 }
 

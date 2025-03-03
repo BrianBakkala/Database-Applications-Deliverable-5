@@ -133,6 +133,7 @@ class DBHelper:
 
     def prep_query_for_display(self, query, query_params=None):
         result = self.run_query(query, query_params)
+
         return {
             "result": result,
             "column_names": result[0].keys(),
@@ -150,7 +151,7 @@ class DBHelper:
         try:
             cursor = self.connection.cursor(dictionary=True)
 
-            if query_params != None:
+            if query_params is not None:
                 cursor.execute(query, tuple(query_params.values()))
             else:
                 cursor.execute(query)
@@ -162,9 +163,18 @@ class DBHelper:
                 return callback(records)
 
         except Error as e:
-            output = tuple(query_params.values())
-            print(f"Error reading records: {e}|{query}|{output}|||||||||")
-            return [f"Error reading records: {e}", query, tuple(query_params.values())]
+            if query_params is not None:
+                output = tuple(query_params.values())
+                print(f"Error reading records: {e}|{query}|{output}|||||||||")
+                return [
+                    f"Error reading records: {e}",
+                    query,
+                    tuple(query_params.values()),
+                ]
+            else:
+                print(f"Error reading records: {e} ")
+                return [f"Error reading records: {e}"]
+
         finally:
             self.connection.commit()
             cursor.close()

@@ -10,6 +10,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
+                    {{ icon('bi-star-fill') }}
                     CRUD
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -26,9 +27,8 @@
                     {{ util.convert_snake_case_to_readable(category) }}
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% for value in query_maps.filter_by_category(category).keys() %}
-                    <a class="dropdown-item" href="../set-membership/{{ value }}">{{
-                        util.convert_snake_case_to_readable(value) }}</a>
+                    {% for key, data in query_maps.filter_by_category(category).items() %}
+                    <a class="dropdown-item" href="../set-membership/{{ key }}">{{data['name'] }}</a>
                     {% endfor %}
                 </div>
             </li>

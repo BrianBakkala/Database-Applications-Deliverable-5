@@ -6,13 +6,13 @@
     <div class='confirm'>Confirm?</div>
 
     <div class='edit-button-group'>
-        <i class="bi bi-pencil-square main-button" style='color:slategray' onclick='toggleEditMode(this)'></i>
+        <i class="bi bi-pencil-square" main-button style='color:slategray' onclick='toggleEditMode(this)'></i>
 
         <i class="bi bi-save" style='color:green' onclick='submitUpdate(this, "{{ table }}", "{{ record_id }}")'></i>
         <i class="bi bi-x-lg" style='color:red' onclick='toggleEditMode(this)'></i>
     </div>
     <div class='delete-button-group'>
-        <i class="bi bi-trash3 main-button" style='color:red' onclick='toggleDeleteMode(this)'></i>
+        <i class="bi bi-trash3" main-button style='color:red' onclick='toggleDeleteMode(this)'></i>
 
         <i class="bi bi-trash3" style='color:green' onclick='submitDelete("{{ table }}", "{{ record_id }}")'></i>
         <i class="bi bi-x-lg" style='color:red' onclick='toggleDeleteMode(this)'></i>
@@ -20,7 +20,7 @@
 </div>
 {%- endmacro %}
 
-{% macro inputRow(entry_value, col_name, col_data) -%}
+{% macro inputRow(entry_value, col_name, col_data) %}
 <div class='custom-table-td'>
     {% if col_data['extra'] == 'auto_increment' %}
     {# check if column is auto_increment #}
@@ -29,68 +29,8 @@
     <input disabled type="text" auto-increment name="{{ col_name }}" value="{{ entry_value }}" class="form-control"
         required readonly />
 
-    {% elif col_data['foreign_keys']|length > 0 %}
-    {# check if column has foreign keys #}
-    <select name="{{ col_name }}" id="input_{{ col_name }}" class="form-control" required>
-
-
-        {% for refs in col_data['foreign_keys'].values() %}
-        {% for fk in refs %}
-
-        {% if fk[0] == entry_value %}
-        <option value="{{ fk[0] }}" selected>
-            {% else %}
-        <option value="{{ fk[0] }}">
-            {% endif %}
-
-            ({{ fk[0] }}) {{fk[1:]|join(" ") }}
-
-        </option>
-
-        {% endfor %}
-        {% endfor %}
-    </select>
-
-    <select disabled readonly class="form-control" value="{{ entry_value }}">
-
-        {% for refs in col_data['foreign_keys'].values() %}
-        {% for fk in refs %}
-
-        {% if fk[0] == entry_value %}
-        <option value="{{ fk[0] }}" selected> {{ fk[0] }} ({{fk[1:]|join(" ") }}) </option>
-        {% endif %}
-
-        {% endfor %}
-        {% endfor %}
-
-    </select>
-
     {% else %}
-    {# otherwise, get type and use appropriate form eleemnt #}
-    {% if col_data['type'] == 'int' %}
-
-    <input type="number" name="{{ col_name }}" class="form-control" value="{{ entry_value }}" id="input_{{ col_name }}"
-        placeholder="{{ readable_column_name }}" min="0" required />
-
-    {# handle decimal types with appropriate precision #}
-    {% elif col_data['type'].startswith('decimal') %}
-    {% set precision = col_data['type'].split('(')[1].split(')')[0] %}
-    {% set x, y = precision.split(',') %}
-    {% set step_value = '0.' + '0' * (y|int - 1) + '1'%}
-    <input type="number" name="{{ col_name }}" class="form-control" value="{{ entry_value }}" id="input_{{ col_name }}"
-        placeholder="{{ readable_column_name }}" step="{{ step_value }}" min="0" required />
-
-    {% elif col_data['type'] == 'date' %}
-    <input type="date" name="{{ col_name }}" value="{{ entry_value }}" class="form-control" id="input_{{ col_name }}"
-        required />
-
-    {% else %}
-    <input type="text" name="{{ col_name }}" value="{{ entry_value }}" class="form-control" id="input_{{ col_name }}"
-        placeholder="{{ readable_column_name }}" required />
-
-    {% endif %}
-    <input disabled readonly class="form-control" value="{{ entry_value }}" />
-
+    {{ inputForColumn(col_data, entry_value, true) }}
     {% endif %}
 </div>
 

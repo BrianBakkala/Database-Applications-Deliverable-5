@@ -60,6 +60,9 @@ def render_mapped_query(query_data, mapping_key):
         else None
     )
 
+    if query_data["query_type"] == "dynamic" and "column" not in query_data:
+        raise ValueError("The 'column' key is required for dynamic queries.")
+
     if "column" in query_data:
         parts = query_data["column"].split(".")
         column_data = db.get_columns_data(parts[0])[parts[1]]

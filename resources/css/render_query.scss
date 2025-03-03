@@ -10,7 +10,11 @@ codeblock {
 
 }
 
-#dynamic_query_form input {
-    display: initial !important;
-    width: initial !important;
+#dynamic_query_form {
+
+    select,
+    input {
+        display: initial !important;
+        width: initial !important;
+    }
 }

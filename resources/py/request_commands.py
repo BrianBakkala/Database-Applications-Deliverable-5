@@ -1,6 +1,5 @@
 from resources.py.db_helper import DBHelper
 from resources.py import util, query_maps
-import json
 
 db = DBHelper(host="localhost", user="root", password="", database="cs727_baseball")
 

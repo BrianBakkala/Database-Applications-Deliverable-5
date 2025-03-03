@@ -21,13 +21,15 @@
             </li>
 
             {% for category in query_maps.UNIQUE_QUERY_MAPPING_CATEGORIES %}
+            {% set relevant_items = query_maps.filter_by_category(category).items()%}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     {{ util.convert_snake_case_to_readable(category) }}
+                    <!-- ({{ relevant_items | length }}) -->
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    {% for key, data in query_maps.filter_by_category(category).items() %}
+                    {% for key, data in relevant_items %}
                     <a class="dropdown-item" href="../set-membership/{{ key }}">{{data['name'] }}</a>
                     {% endfor %}
                 </div>

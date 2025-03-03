@@ -37,6 +37,7 @@ div form .crud-ops-button-group {
   align-items: center;
   margin-right: 1rem;
   background-color: transparent !important;
+  border: 1px solid transparent !important;
 }
 div form .crud-ops-button-group i.bi {
   cursor: pointer;

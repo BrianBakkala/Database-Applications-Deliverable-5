@@ -2,7 +2,19 @@ function handleInput(element, mappingKey)
 {
     const convertToNumberIfPossible = (value) => isNaN(Number(value)) ? value : Number(value);
 
-    runDynamicQuery(convertToNumberIfPossible(element.value), mappingKey)
+    const inputValue = convertToNumberIfPossible(element.value);
+    const codeblock = document.querySelector('codeblock');
+    const inputValueElement = document.querySelector('.input-value');
+    if (!inputValueElement)
+    {
+        codeblock.innerHTML = codeblock.innerHTML.replace("?", "<div class = 'input-value'>" + inputValue + "</div>");
+    }
+    else
+    {
+        inputValueElement.innerHTML = inputValue;
+    }
+
+    runDynamicQuery(inputValue, mappingKey)
         .then(r => document.getElementById('dynamic_query_result').innerHTML = r.html)
         // .then(r => console.log(r))
         .catch(e => document.getElementById('dynamic_query_result').innerHTML = 'No results.');
@@ -15,20 +27,5 @@ async function runDynamicQuery(input, mappingKey)
             mapping_key: mappingKey,
             input
         }
-        , (response) =>
-        {
-            const codeblock = document.querySelector('codeblock');
-            const inputValueText = document.querySelector('.input-value');
-            if (!inputValueText)
-            {
-                codeblock.innerHTML = codeblock.innerHTML.replace("?", "<div class = 'input-value'>" + input + "</div>");
-            }
-            else
-            {
-                inputValueText.innerHTML = input;
-            }
-
-            return response;
-
-        });
+    );
 }

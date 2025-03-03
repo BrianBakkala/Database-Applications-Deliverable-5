@@ -87,7 +87,7 @@
     <option value="{{ fk[0] }}">
         {% endif %}
 
-        ({{ fk[0] }}) {{fk[1:]|join(" ") }}
+        {{ fk[0] }} ({{fk[1:]|join(" ") }})
 
     </option>
 
@@ -102,7 +102,7 @@
     {% for fk in refs %}
 
     {% if fk[0] == inital_value %}
-    <option value="{{ fk[0] }}" selected> ({{ fk[0] }}) {{fk[1:]|join(" ") }} </option>
+    <option value="{{ fk[0] }}" selected> {{ fk[0] }} ({{fk[1:]|join(" ") }}) </option>
     {% endif %}
 
     {% endfor %}

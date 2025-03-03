@@ -1,7 +1,14 @@
 from resources.py.db_helper import DBHelper
 from resources.py import util, query_maps
 
-db = DBHelper(host="localhost", user="root", password="", database="cs727_baseball")
+configuration = util.get_config()
+
+db = DBHelper(
+    host=configuration["db"]["host"],
+    user=configuration["db"]["user"],
+    password=configuration["db"]["password"],
+    database=configuration["db"]["database"],
+)
 
 
 def create(obj):

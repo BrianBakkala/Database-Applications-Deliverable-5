@@ -1,4 +1,5 @@
 from flask import render_template_string
+import json
 
 
 TABLE_NAME_MAPPINGS = {
@@ -20,6 +21,12 @@ CRUD_OPERATIONS_ICONS = {
 }
 
 CRUD_OPERATIONS = CRUD_OPERATIONS_ICONS.keys()
+
+
+def get_config():
+    with open("config.json", "r") as file:
+        config = json.load(file)
+        return config
 
 
 def get_crud_icon(operation):

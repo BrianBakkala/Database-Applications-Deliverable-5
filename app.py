@@ -2,8 +2,17 @@ from flask import Flask, render_template, url_for, redirect, request, jsonify
 from resources.py.db_helper import DBHelper
 from resources.py import util, request_commands, query_maps
 
+
 app = Flask(__name__)
-db = DBHelper(host="localhost", user="root", password="", database="cs727_baseball")
+configuration = util.get_config()
+
+
+db = DBHelper(
+    host=configuration["db"]["host"],
+    user=configuration["db"]["user"],
+    password=configuration["db"]["password"],
+    database=configuration["db"]["database"],
+)
 
 
 @app.context_processor

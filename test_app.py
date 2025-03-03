@@ -20,6 +20,22 @@ def test_homepage(client):
     assert b"Welcome" in response.data
 
 
+def test_render_crud(client):
+    table = "teams"
+    response = client.get(f"/crud/{table}")
+    assert response.status_code == 200
+    assert b"teams" in response.data
+
+
+def test_render_set_ops(client):
+    set_op = "union"
+    response = client.get(f"/set-ops/{set_op}")
+    assert response.status_code == 200
+    assert b"Union" in response.data
+    assert b"Description" in response.data
+    assert b"Query" in response.data
+
+
 # # # # # # #
 # DB
 # # # # # # #

@@ -1,6 +1,4 @@
-pandas
-matplotlib
-numpy
+jinja2
 
 flask
 flask-sqlalchemy

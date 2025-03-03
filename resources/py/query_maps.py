@@ -38,8 +38,8 @@ QUERY_MAPPINGS = {
         "name": "Hello",
         "icon": "union",
         "query_type": "dynamic",
-        "query": "SELECT * FROM batting_statistics WHERE player_id = ?",
-        "column": "batting_statistics.player_id",
+        "query": "SELECT player_id, first_name, last_name \r\nFROM players \r\nWHERE player_id IN (SELECT player_id FROM batting_statistics WHERE home_runs > ?);",
+        "column": "batting_statistics.home_runs",
         "description": "desv.",
     },
 }

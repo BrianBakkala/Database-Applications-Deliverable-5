@@ -163,7 +163,7 @@ class DBHelper:
 
         except Error as e:
             output = tuple(query_params.values())
-            print(f"Error reading records: {e}||{output}|||||||||")
+            print(f"Error reading records: {e}|{query}|{output}|||||||||")
             return [f"Error reading records: {e}", query, tuple(query_params.values())]
         finally:
             self.connection.commit()

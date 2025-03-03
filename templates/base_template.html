@@ -29,7 +29,8 @@
 
 </head>
 
-<body onload='if(typeof( onloadHandler())=="function") bodyOnload();'>
+<body onload='if (typeof onloadHandler === "function") onloadHandler();'>
+
 
     {% include "navbar.html" %}
 

@@ -1,3 +1,6 @@
+from flask import render_template_string
+
+
 TABLE_NAME_MAPPINGS = {
     "batting_statistics": "Batting Statistics",
     "games": "Games",
@@ -17,16 +20,6 @@ CRUD_OPERATIONS_ICONS = {
 }
 
 CRUD_OPERATIONS = CRUD_OPERATIONS_ICONS.keys()
-
-
-SET_OPERATIONS = {
-    "union": {
-        "name": "Union",
-        "icon": "union",
-        "query": "SELECT first_name FROM players \nUNION \nSELECT first_name FROM managers\n\nORDER BY first_name;",
-        "description": "Performs the set operation UNION on the two queries. This will return all unique first names from both tables.",
-    },
-}
 
 
 def get_crud_icon(operation):
@@ -57,3 +50,13 @@ def convert_to_table_name(plain_text):
 
 def hello_world_test():
     return "HW!"
+
+
+def render_template_string_with_components_context(template_string, **components):
+
+    new_str = (
+        ' {% extends "_components.html" %}  {% block page %} '
+        + template_string
+        + " {% endblock %} "
+    )
+    return {"html": render_template_string(new_str, **components)}

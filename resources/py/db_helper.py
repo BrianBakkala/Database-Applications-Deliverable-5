@@ -131,8 +131,8 @@ class DBHelper:
             self.connection.close()
             print("Database connection closed.")
 
-    def prep_query_for_display(self, query):
-        result = self.run_query(query)
+    def prep_query_for_display(self, query, query_params=None):
+        result = self.run_query(query, query_params)
         return {
             "result": result,
             "column_names": result[0].keys(),
@@ -162,7 +162,8 @@ class DBHelper:
                 return callback(records)
 
         except Error as e:
-            print(f"Error reading records: {e}")
+            output = tuple(query_params.values())
+            print(f"Error reading records: {e}||{output}|||||||||")
             return [f"Error reading records: {e}", query, tuple(query_params.values())]
         finally:
             self.connection.commit()

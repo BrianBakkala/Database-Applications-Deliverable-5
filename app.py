@@ -1,7 +1,6 @@
 from flask import Flask, render_template, url_for, redirect, request, jsonify
 from resources.py.db_helper import DBHelper
-from resources.py import util
-from resources.py import request_commands
+from resources.py import util, request_commands, query_maps
 
 app = Flask(__name__)
 db = DBHelper(host="localhost", user="root", password="", database="cs727_baseball")
@@ -9,7 +8,7 @@ db = DBHelper(host="localhost", user="root", password="", database="cs727_baseba
 
 @app.context_processor
 def utility_processor():
-    return {"util": util}
+    return {"util": util, "query_maps": query_maps}
 
 
 # # # # # #
@@ -42,18 +41,40 @@ def render_crud(table):
     pass
 
 
-@app.route("/set-ops/<set_op>")
-def render_set_ops(set_op):
-
-    op_data = util.SET_OPERATIONS.get(set_op)
-    return render_template(
-        "set_ops.html",
-        data={"hello": "world"},
-        set_op=set_op,
-        set_op_data=op_data,
-        display_data=db.prep_query_for_display(query=op_data.get("query")),
-    )
+@app.route("/<category>/<key>")
+def render_set_membership(category, key):
+    data = query_maps.QUERY_MAPPINGS.get(key)
+    return render_mapped_query(data, key)
     pass
+
+
+# # # # # #
+# RENDER MODULAR QUERY
+# # # # # #
+
+
+def render_mapped_query(query_data, mapping_key):
+    display_data = (
+        db.prep_query_for_display(query=query_data.get("query"))
+        if query_data["query_type"] == "static"
+        else None
+    )
+
+    if "column" in query_data:
+        parts = query_data["column"].split(".")
+        column_data = db.get_columns_data(parts[0])[parts[1]]
+    else:
+        column_data = None
+
+    query_type = query_data["query_type"]
+
+    return render_template(
+        f"{query_type}_query.html",
+        data=query_data,
+        mapping_key=mapping_key,
+        column_data=column_data,
+        display_data=display_data,
+    )
 
 
 # # # # # #

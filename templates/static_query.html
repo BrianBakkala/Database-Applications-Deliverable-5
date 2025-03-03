@@ -2,18 +2,18 @@
 
 
 {% block header %}
-{{ biIcon(set_op_data["icon"]) }} {{set_op_data["name"] }}
+{{ biIcon(data["icon"]) }} {{data["name"] }}
 {% endblock %}
 
 
 {% block main %}
 <div class="container mb-4">
     <h5>Query</h5>
-    <codeblock>{{ set_op_data["query"] }}</codeblock>
+    <codeblock>{{ data["query"] }}</codeblock>
 </div>
 <div class="container mb-4">
     <h5>Description</h5>
-    <p>{{ set_op_data["description"] }}</p>
+    <p>{{ data["description"] }}</p>
 </div>
 <div class="container mb-4">
     <h5>Result:</h5>
@@ -24,9 +24,9 @@
 {% endblock %}
 
 {% block styles %}
-<link rel="stylesheet" href="../static/css/set_ops.css">
+<link rel="stylesheet" href="../static/css/render_query.css">
 {% endblock %}
 
 {% block scripts %}
-<script src="../static/js/set_ops.js"></script>
+<script src="../static/js/render_query.js"></script>
 {% endblock %}

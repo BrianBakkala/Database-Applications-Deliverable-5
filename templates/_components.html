@@ -49,6 +49,79 @@
 {%- endmacro %}
 
 
+{% macro inputForColumn(col_data, add_readonly, oninput) -%}
+
+{% set col_name= col_data["name"] %}
+{% set readable_column_name = util.convert_snake_case_to_readable(col_name) %}
+
+{% if col_data['foreign_keys']|length > 0 %}
+{# check if column has foreign keys #}
+<select name="{{ col_name }}" id="input_{{ col_name }}" class="form-control" required oninput="{{ oninput | safe}}">
+
+    <option>Select {{ readable_column_name }}...</option>
+    {% for refs in col_data['foreign_keys'].values() %}
+    {% for fk in refs %}
+
+    {% if fk[0] == entry_value %}
+    <option value="{{ fk[0] }}" selected>
+        {% else %}
+    <option value="{{ fk[0] }}">
+        {% endif %}
+
+        ({{ fk[0] }}) {{fk[1:]|join(" ") }}
+
+    </option>
+
+    {% endfor %}
+    {% endfor %}
+</select>
+
+{% if add_readonly %}
+<select disabled readonly class="form-control" value="{{ entry_value }}">
+
+    {% for refs in col_data['foreign_keys'].values() %}
+    {% for fk in refs %}
+
+    {% if fk[0] == entry_value %}
+    <option value="{{ fk[0] }}" selected> {{ fk[0] }} ({{fk[1:]|join(" ") }}) </option>
+    {% endif %}
+
+    {% endfor %}
+    {% endfor %}
+
+</select>{% endif %}
+
+{% else %}
+{# otherwise, get type and use appropriate form eleemnt #}
+{% if col_data['type'] == 'int' %}
+
+<input type="number" oninput="{{ oninput }}" name="{{ col_name }}" class="form-control" value="{{ entry_value }}"
+    id="input_{{ col_name }}" placeholder="{{ readable_column_name }}" min="0" required />
+
+{# handle decimal types with appropriate precision #}
+{% elif col_data['type'].startswith('decimal') %}
+{% set precision = col_data['type'].split('(')[1].split(')')[0] %}
+{% set x, y = precision.split(',') %}
+{% set step_value = '0.' + '0' * (y|int - 1) + '1'%}
+<input type="number" oninput="{{ oninput }}" name="{{ col_name }}" class="form-control" value="{{ entry_value }}"
+    id="input_{{ col_name }}" placeholder="{{ readable_column_name }}" step="{{ step_value }}" min="0" required />
+
+{% elif col_data['type'] == 'date' %}
+<input type="date" oninput="{{ oninput }}" name="{{ col_name }}" value="{{ entry_value }}" class="form-control"
+    id="input_{{ col_name }}" required />
+
+{% else %}
+<input type="text" oninput="{{ oninput }}" name="{{ col_name }}" value="{{ entry_value }}" class="form-control"
+    id="input_{{ col_name }}" placeholder="{{ readable_column_name }}" required />
+
+{% endif %}
+{% if add_readonly %}
+<input disabled readonly class="form-control" value="{{ entry_value }}" />
+{% endif %}
+{% endif %}
+{%- endmacro %}
+
+
 
 
 

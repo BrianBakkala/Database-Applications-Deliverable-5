@@ -37,25 +37,26 @@ async function dbRequest(command, object, callback)
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(object),
-    }).then(r =>
-    {
-
-        if (r.ok)
+    })
+        .then(r =>
         {
-            if (typeof (callback) === 'function')
-            {
-                return callback(r.json());
-            }
-            else
+            if (r.ok)
             {
                 return r.json();
             }
-        }
-        else
+            else
+            {
+                throw new Error('Failed to fetch');
+            }
+        })
+        .then(r =>
         {
-            throw new Error('Failed to fetch');
-        }
-    });
+            if (typeof (callback) === 'function')
+            {
+                return callback(r);
+            }
+            return r;
+        });
 }
 /**
  * Grabs the data from a form element and serializes it into a JSON object

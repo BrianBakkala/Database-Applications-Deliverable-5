@@ -27,7 +27,7 @@ def test_render_crud(client):
     assert b"teams" in response.data
 
 
-def test_render_set_ops(client):
+def test_render_static_query(client):
     set_op = "union"
     response = client.get(f"/set-ops/{set_op}")
     assert response.status_code == 200

@@ -1,0 +1,41 @@
+{% extends "base_template.html" %}
+
+
+{% block header %}
+{{ biIcon(data["icon"]) }} {{data["name"] }}
+{% endblock %}
+
+
+{% block main %}
+
+<div class="container mb-4">
+    <h5>Query</h5>
+    <codeblock>{{ data["query"] }}</codeblock>
+</div>
+
+<div class="container mb-4">
+    <h5>Description</h5>
+    <p>{{ data["description"] }}</p>
+</div>
+
+<div class="container mb-4">
+    <h5>Input</h5>
+    <form>
+        {{ inputForColumn(column_data, false, "handleInput(this, '" + mapping_key + "')") }}
+    </form>
+</div>
+
+<div class="container mb-4">
+    <h5>Result:</h5>
+    <div class="container" id='dynamic_query_result' />
+</div>
+
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="../static/css/render_query.css">
+{% endblock %}
+
+{% block scripts %}
+<script src="../static/js/render_query.js"></script>
+{% endblock %}

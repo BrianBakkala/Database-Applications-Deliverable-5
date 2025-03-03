@@ -31,7 +31,7 @@ QUERY_MAPPINGS = {
     #
     #
     #
-    # set  membership
+    # set membership
     #
     "home_run_threshold": {
         "category": "set_membership",
@@ -53,6 +53,36 @@ QUERY_MAPPINGS = {
     #
     #
     #
+    # set comparison
+    #
+    "better_road_teams": {
+        "category": "set_comparison",
+        "name": "Better Road Teams",
+        "icon": "bi-airplane-fill",
+        "query_type": "dynamic",
+        "query": "SELECT g.home_team_id, t.team_name, SUM(g.home_team_score) AS home_runs, SUM(g.away_team_score) AS away_runs\r\nFROM games g\r\nJOIN teams t ON g.home_team_id = t.team_id\r\nWHERE g.season_id = ?\r\nGROUP BY g.home_team_id, t.team_name\r\nHAVING home_runs < away_runs;",
+        "column": "games.season_id",
+        "description": "This query compares the number of home team runs to away team runs for each team, and find teams that scored more runs on the road in a given season.",
+    },
+    "winning_record": {
+        "category": "set_comparison",
+        "name": "Teams with winning records",
+        "icon": "bi-trophy",
+        "query_type": "static",
+        "query": "SELECT t.team_name, \r\n    SUM(CASE WHEN g.home_team_id = t.team_id AND g.home_team_score > g.away_team_score THEN 1 ELSE 0 END) + \r\n    SUM(CASE WHEN g.away_team_id = t.team_id AND g.away_team_score > g.home_team_score THEN 1 ELSE 0 END) AS wins,\r\n    SUM(CASE WHEN g.home_team_id = t.team_id AND g.home_team_score < g.away_team_score THEN 1 ELSE 0 END) + \r\n    SUM(CASE WHEN g.away_team_id = t.team_id AND g.away_team_score < g.home_team_score THEN 1 ELSE 0 END) AS losses\r\nFROM teams t\r\nJOIN games g ON g.home_team_id = t.team_id OR g.away_team_id = t.team_id\r\nWHERE g.season_id = 2\r\nGROUP BY t.team_id\r\nHAVING wins > losses;",
+        "description": "This query compares the total number of wins and losses for each team based on their game results in 2024.",
+    },
+    "run_differential": {
+        "category": "set_comparison",
+        "name": "Teams with negative run differentials",
+        "icon": "bi-thumbs-down",
+        "query_type": "static",
+        "query": "SELECT t.team_name,\r\n    SUM(CASE WHEN g.home_team_id = t.team_id THEN g.home_team_score ELSE 0 END) + \r\n    SUM(CASE WHEN g.away_team_id = t.team_id THEN g.away_team_score ELSE 0 END) AS runs_scored,\r\n    SUM(CASE WHEN g.home_team_id = t.team_id THEN g.away_team_score ELSE 0 END) + \r\n    SUM(CASE WHEN g.away_team_id = t.team_id THEN g.home_team_score ELSE 0 END) AS runs_allowed\r\nFROM teams t\r\nJOIN games g ON g.home_team_id = t.team_id OR g.away_team_id = t.team_id\r\nWHERE g.season_id = 2\r\nGROUP BY t.team_name\r\nHAVING runs_scored < runs_allowed;",
+        "description": "This query identifies teams with a negative run difference (i.e., scoring fewer runs than they allowed) in 2024.",
+    },
+    #
+    #
+    #
     # subqueries using with
     #
     "rbi_leaders": {
@@ -60,7 +90,7 @@ QUERY_MAPPINGS = {
         "name": "RBI Leaders",
         "icon": "fa-up-long",
         "query_type": "dynamic",
-        "query": "WITH RBIleaders AS (\r\n    SELECT player_id, SUM(rbi) AS total_rbi \r\n    FROM batting_statistics \r\n    WHERE season_id = 2 \r\n    GROUP BY player_id\r\n)\r\nSELECT p.player_id, p.first_name, p.last_name, rbil.total_rbi \r\nFROM players p\r\nJOIN RBIleaders rbil ON p.player_id = rbil.player_id\r\nORDER BY rbil.total_rbi DESC\r\nLIMIT ?;",
+        "query": "WITH RBIleaders AS (\r\n SELECT player_id, SUM(rbi) AS total_rbi \r\n FROM batting_statistics \r\n WHERE season_id = 2 \r\n GROUP BY player_id\r\n)\r\nSELECT p.player_id, p.first_name, p.last_name, rbil.total_rbi \r\nFROM players p\r\nJOIN RBIleaders rbil ON p.player_id = rbil.player_id\r\nORDER BY rbil.total_rbi DESC\r\nLIMIT ?;",
         "column": "batting_statistics.rbi",  # not really, just an integer
         "description": "This query finds the top n power hitters in terms of RBIs in a season.",
     },
@@ -69,7 +99,7 @@ QUERY_MAPPINGS = {
         "name": "Total HRs per team per season",
         "icon": "bi-123",
         "query_type": "dynamic",
-        "query": "WITH TeamHomeRuns AS (\r\n    SELECT team_id, SUM(home_runs) AS total_home_runs \r\n    FROM batting_statistics \r\n    INNER JOIN players\r\n    \tON players.player_id = batting_statistics.player_id\r\n    WHERE season_id = ? \r\n    GROUP BY team_id\r\n)\r\nSELECT t.team_name, thr.total_home_runs \r\nFROM teams t\r\nJOIN TeamHomeRuns thr ON t.team_id = thr.team_id\r\nORDER BY thr.total_home_runs DESC",
+        "query": "WITH TeamHomeRuns AS (\r\n SELECT team_id, SUM(home_runs) AS total_home_runs \r\n FROM batting_statistics \r\n INNER JOIN players\r\n \tON players.player_id = batting_statistics.player_id\r\n WHERE season_id = ? \r\n GROUP BY team_id\r\n)\r\nSELECT t.team_name, thr.total_home_runs \r\nFROM teams t\r\nJOIN TeamHomeRuns thr ON t.team_id = thr.team_id\r\nORDER BY thr.total_home_runs DESC",
         "column": "seasons.season_id",
         "description": "This ranks teams by total home runs in a given season.",
     },
@@ -78,7 +108,7 @@ QUERY_MAPPINGS = {
         "name": "Highest scoring games",
         "icon": "bi-123",
         "query_type": "dynamic",
-        "query": "WITH GameScores AS (\r\n    SELECT game_id, home_team_id, away_team_id, \r\n           (home_team_score + away_team_score) AS total_runs\r\n    FROM games\r\n)\r\nSELECT gs.game_id, \r\n       home_team.team_name AS home_team, \r\n       away_team.team_name AS away_team, \r\n       gs.total_runs \r\nFROM GameScores gs\r\nJOIN teams home_team ON gs.home_team_id = home_team.team_id\r\nJOIN teams away_team ON gs.away_team_id = away_team.team_id\r\nHAVING total_runs>?\r\nORDER BY gs.total_runs DESC",
+        "query": "WITH GameScores AS (\r\n SELECT game_id, home_team_id, away_team_id, \r\n   (home_team_score + away_team_score) AS total_runs\r\n FROM games\r\n)\r\nSELECT gs.game_id, \r\n  home_team.team_name AS home_team, \r\n  away_team.team_name AS away_team, \r\n  gs.total_runs \r\nFROM GameScores gs\r\nJOIN teams home_team ON gs.home_team_id = home_team.team_id\r\nJOIN teams away_team ON gs.away_team_id = away_team.team_id\r\nHAVING total_runs>?\r\nORDER BY gs.total_runs DESC",
         "column": "games.home_team_score",
         "description": "This finds the highest-scoring games ever played.",
     },
@@ -92,7 +122,7 @@ QUERY_MAPPINGS = {
         "name": "Average Margin of Victory",
         "icon": "bi-distribute-horizontal",
         "query_type": "static",
-        "query": "SELECT \r\n\tt.team_name,\r\n\tAVG(\r\n\t\t\r\n\t\tCASE \r\n\t\t\tWHEN g.home_team_id = t.team_id THEN g.home_team_score - g.away_team_score\r\n\t\t\tWHEN g.away_team_id = t.team_id THEN g.away_team_score - g.home_team_score\r\n\t\t\tELSE 0 \r\n\t\tEND) AS avg_margin_of_victory\r\nFROM games g\r\nJOIN  teams t ON g.home_team_id = t.team_id OR g.away_team_id = t.team_id\r\nGROUP BY \r\n\tt.team_name\r\nORDER BY \r\n\tavg_margin_of_victory DESC;",
+        "query": "SELECT \r\n\tt.team_name,\r\n\tAVG(\r\n\t\t\r\n\t\tCASE \r\n\t\t\tWHEN g.home_team_id = t.team_id THEN g.home_team_score - g.away_team_score\r\n\t\t\tWHEN g.away_team_id = t.team_id THEN g.away_team_score - g.home_team_score\r\n\t\t\tELSE 0 \r\n\t\tEND) AS avg_margin_of_victory\r\nFROM games g\r\nJOIN teams t ON g.home_team_id = t.team_id OR g.away_team_id = t.team_id\r\nGROUP BY \r\n\tt.team_name\r\nORDER BY \r\n\tavg_margin_of_victory DESC;",
         "description": "This query returns the average margin of victory for each team",
     },
     "highest_scoring_stadiums": {
@@ -108,18 +138,34 @@ QUERY_MAPPINGS = {
         "name": "Best season OBP rank",
         "icon": "bi-123",
         "query_type": "dynamic",
-        "query": "SELECT\r\n\tb.player_id, players.first_name, players.last_name, MIN(obp_rank) as best_obp_rank\r\nFROM \r\n\tbatting_statistics b \r\nINNER JOIN \r\n(\r\n\tSELECT player_id,\r\n\t\tRANK() OVER (PARTITION BY season_id ORDER BY on_base_percentage DESC) \r\n\t\tAS obp_rank\r\n\tFROM batting_statistics \r\n\tORDER BY player_id\r\n) as obp_ranks\r\nON\r\n\t(obp_ranks.player_id = b.player_id) \r\nINNER JOIN \r\n\tplayers ON\r\n    \tplayers.player_id = b.player_id\r\nWHERE \r\n\tb.player_id=?\r\nGROUP BY \r\n\tplayer_id",
+        "query": "SELECT\r\n\tb.player_id, players.first_name, players.last_name, MIN(obp_rank) as best_obp_rank\r\nFROM \r\n\tbatting_statistics b \r\nINNER JOIN \r\n(\r\n\tSELECT player_id,\r\n\t\tRANK() OVER (PARTITION BY season_id ORDER BY on_base_percentage DESC) \r\n\t\tAS obp_rank\r\n\tFROM batting_statistics \r\n\tORDER BY player_id\r\n) as obp_ranks\r\nON\r\n\t(obp_ranks.player_id = b.player_id) \r\nINNER JOIN \r\n\tplayers ON\r\n \tplayers.player_id = b.player_id\r\nWHERE \r\n\tb.player_id=?\r\nGROUP BY \r\n\tplayer_id",
         "column": "batting_statistics.player_id",
         "description": "This query gets the best rankings of players in on base percentage across multiple seasons. For example, if a player was ranked 1st, 3rd, and 5th across three seasons, return the best rank, rank 1",
+    },
+    "above_avg_rbi": {
+        "category": "advanced_functions",
+        "name": "Above league-average RBIs",
+        "icon": "bi-123",
+        "query_type": "static",
+        "query": "SELECT \r\n\tb.player_id,\r\n\tb.season_id,\r\n\tSUM(b.rbi) AS total_rbi,\r\n\tavg_season.avg_rbi\r\nFROM batting_statistics b\r\nJOIN \r\n\t(SELECT season_id, AVG(rbi) AS avg_rbi\r\n\tFROM batting_statistics\r\n\tGROUP BY season_id) avg_season\r\nON b.season_id = avg_season.season_id\r\nGROUP BY \r\n\tb.player_id, b.season_id\r\n\r\nHAVING \r\n\ttotal_rbi > avg_season.avg_rbi;",
+        "description": "This query find players who hit an above-average number of RBIs hit in a season.",
     },
     "season_hr_rank": {
         "category": "advanced_functions",
         "name": "Season HR rank",
         "icon": "fa-baseball-bat-ball",
         "query_type": "dynamic",
-        "query": "SELECT  p.first_name, p.last_name, home_runs,\r\nRANK() OVER (ORDER BY home_runs DESC) AS home_run_rank\r\nFROM batting_statistics b\r\nJOIN players p ON b.player_id = p.player_id\r\nWHERE season_id = ?;",
+        "query": "SELECT p.first_name, p.last_name, home_runs,\r\nRANK() OVER (ORDER BY home_runs DESC) AS home_run_rank\r\nFROM batting_statistics b\r\nJOIN players p ON b.player_id = p.player_id\r\nWHERE season_id = ?;",
         "column": "batting_statistics.season_id",
         "description": "This query ranks players based on the number of home runs they hit during a given season using the RANK() window function. ",
+    },
+    "most_consistent": {
+        "category": "advanced_functions",
+        "name": "Most consistent batting average across seasons",
+        "icon": "bi-bar-chart-steps",
+        "query_type": "static",
+        "query": "SELECT player_id,\r\n\tMAX(batting_avg) - MIN(batting_avg) AS batting_avg_diff\r\nFROM batting_statistics\r\nGROUP BY player_id\r\nORDER BY batting_avg_diff ASC;",
+        "description": "This query find players with the most consistent average: takes the difference between the maximum and min",
     },
     #
     #
@@ -131,7 +177,7 @@ QUERY_MAPPINGS = {
         "name": "Subtotals and Grand Totals of HRs",
         "icon": "fa-list-check",
         "query_type": "static",
-        "query": "SELECT \r\n\tb.player_id, \r\n\ts.year, \r\n\tSUM(b.home_runs) AS total_home_runs\r\nFROM \r\n\tbatting_statistics b  \r\nJOIN \r\n\tseasons s ON b.season_id = s.season_id\r\nGROUP BY \r\nb.player_id, s.year\r\nWITH ROLLUP;",
+        "query": "SELECT \r\n\tb.player_id, \r\n\ts.year, \r\n\tSUM(b.home_runs) AS total_home_runs\r\nFROM \r\n\tbatting_statistics b \r\nJOIN \r\n\tseasons s ON b.season_id = s.season_id\r\nGROUP BY \r\nb.player_id, s.year\r\nWITH ROLLUP;",
         "description": "This query gets the subtotals and grand totals of homeruns per player per season",
     },
     "sub_grand_stats": {
@@ -139,7 +185,7 @@ QUERY_MAPPINGS = {
         "name": "Subtotals and Grand Totals of Stats",
         "icon": "fa-list-check",
         "query_type": "static",
-        "query": "SELECT first_name, last_name, total_home_runs, total_rbi,  avg_batting_avg,  avg_batting_obp FROM\r\n\t(\r\n\t\tSELECT player_id, season_id ,\r\n\t\t\tSUM(home_runs) AS total_home_runs,\r\n\t\t\tSUM(rbi) AS total_rbi,\r\n\t\t\tAVG(batting_avg) AS avg_batting_avg,\r\n\t\t\tAVG(on_base_percentage) AS avg_batting_obp\r\n\t\tFROM batting_statistics\r\n\t\tGROUP BY player_id, season_id WITH ROLLUP \r\n\r\n\t)  as sub\r\n\r\nLEFT JOIN players p ON sub.player_id = p.player_id AND season_id IS NOT NULL;",
+        "query": "SELECT first_name, last_name, total_home_runs, total_rbi, avg_batting_avg, avg_batting_obp FROM\r\n\t(\r\n\t\tSELECT player_id, season_id ,\r\n\t\t\tSUM(home_runs) AS total_home_runs,\r\n\t\t\tSUM(rbi) AS total_rbi,\r\n\t\t\tAVG(batting_avg) AS avg_batting_avg,\r\n\t\t\tAVG(on_base_percentage) AS avg_batting_obp\r\n\t\tFROM batting_statistics\r\n\t\tGROUP BY player_id, season_id WITH ROLLUP \r\n\r\n\t) as sub\r\n\r\nLEFT JOIN players p ON sub.player_id = p.player_id AND season_id IS NOT NULL;",
         "description": "This query gets the subtotals and grand totals for all stats for players across multiple seasonsm, using rollup to show subtotals of player's stats across multiple seasons. The subquery does the heavy lifting, and the outer query adds the player's names",
     },
 }

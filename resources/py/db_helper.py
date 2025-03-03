@@ -123,7 +123,23 @@ class DBHelper:
         return self.run_query(query, query_params=data)
 
     ######
-    # BIG BOI FUNCTIONS
+    # HELPER FUNCTIONS
+    ######
+    def close_connection(self):
+        """Close the database connection if open."""
+        if self.connection.is_connected():
+            self.connection.close()
+            print("Database connection closed.")
+
+    def prep_query_for_display(self, query):
+        result = self.run_query(query)
+        return {
+            "result": result,
+            "column_names": result[0].keys(),
+        }
+
+    ######
+    # BIG BOI FUNCTION
     ######
 
     def run_query(self, query, query_params=None, callback=None):
@@ -151,9 +167,3 @@ class DBHelper:
         finally:
             self.connection.commit()
             cursor.close()
-
-    def close_connection(self):
-        """Close the database connection if open."""
-        if self.connection.is_connected():
-            self.connection.close()
-            print("Database connection closed.")

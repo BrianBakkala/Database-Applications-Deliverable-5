@@ -19,10 +19,10 @@ div form [readonly] {
   border-color: transparent !important;
   appearance: none;
 }
-div form .crud-ops-button-group:hover i.bi.main-button, div form:has(:hover) .crud-ops-button-group i.bi.main-button {
+div form .crud-ops-button-group:hover i.bi[main-button], div form:has(:hover) .crud-ops-button-group i.bi[main-button] {
   opacity: 0.45;
 }
-div form .crud-ops-button-group:hover i.bi.main-button:hover, div form:has(:hover) .crud-ops-button-group i.bi.main-button:hover {
+div form .crud-ops-button-group:hover i.bi[main-button]:hover, div form:has(:hover) .crud-ops-button-group i.bi[main-button]:hover {
   opacity: 1;
 }
 div form .edit-button-group,
@@ -36,20 +36,24 @@ div form .crud-ops-button-group {
   z-index: 10;
   align-items: center;
   margin-right: 1rem;
+  background-color: transparent !important;
 }
 div form .crud-ops-button-group i.bi {
   cursor: pointer;
 }
-div form .crud-ops-button-group i.bi.main-button {
+div form .crud-ops-button-group i.bi[main-button] {
   opacity: 0;
 }
 
-form .delete-button-group i.bi.main-button,
-form .edit-button-group i.bi.main-button {
+form [auto-increment] {
+  font-style: italic;
+}
+form .delete-button-group i.bi[main-button],
+form .edit-button-group i.bi[main-button] {
   display: initial;
 }
-form .delete-button-group i.bi:not(.main-button),
-form .edit-button-group i.bi:not(.main-button) {
+form .delete-button-group i.bi:not([main-button]),
+form .edit-button-group i.bi:not([main-button]) {
   display: none;
 }
 form .confirm {
@@ -75,10 +79,10 @@ form[edit-mode] .custom-table-td [readonly] {
 form[edit-mode] .delete-button-group {
   display: none;
 }
-form[edit-mode] .edit-button-group i.bi.main-button {
+form[edit-mode] .edit-button-group i.bi[main-button] {
   display: none;
 }
-form[edit-mode] .edit-button-group i.bi:not(.main-button) {
+form[edit-mode] .edit-button-group i.bi:not([main-button]) {
   display: initial;
 }
 form[delete-mode] [readonly] {
@@ -89,10 +93,10 @@ form[delete-mode] [readonly] {
 form[delete-mode] .edit-button-group {
   display: none;
 }
-form[delete-mode] .delete-button-group i.bi.main-button {
+form[delete-mode] .delete-button-group i.bi[main-button] {
   display: none;
 }
-form[delete-mode] .delete-button-group i.bi:not(.main-button) {
+form[delete-mode] .delete-button-group i.bi:not([main-button]) {
   display: initial;
 }
 

@@ -8,6 +8,9 @@ body {
   margin: 0;
   padding: 0;
 }
+body h1 {
+  margin-block: 1rem;
+}
 
 nav.navbar-dark {
   color: white;
@@ -21,6 +24,17 @@ nav.navbar-dark {
   visibility: hidden;
 }
 
+codeblock {
+  display: block;
+  font-family: monospace;
+  white-space: pre-wrap;
+  font-size: 1.25rem;
+  background-color: gray;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+}
+
 .custom-table-table {
   display: grid;
   grid-template-columns: repeat(var(--num-columns), auto);
@@ -30,9 +44,24 @@ nav.navbar-dark {
 .custom-table-table .custom-table-tr {
   display: contents;
 }
+.custom-table-table .custom-table-th {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  background-color: rgb(169, 158, 255);
+  font-weight: bold;
+  font-size: 1.05em;
+  padding: 7pt;
+}
 .custom-table-table .custom-table-td {
   display: inline-flex;
+  padding: 4px;
   align-items: center;
+  font-size: 1em;
+  background-color: rgb(231, 228, 255);
+}
+.custom-table-table .custom-table-tr:has(.custom-table-td:hover) .custom-table-td:not(.crud-ops-button-group) {
+  background-color: rgb(216, 211, 255);
 }
 
 /*# sourceMappingURL=global.css.map */

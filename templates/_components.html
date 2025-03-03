@@ -1,0 +1,109 @@
+{% macro testComponent(param) -%}
+<div class='custom-table-td'>
+    hello there{{ param }}
+</div>
+{%- endmacro %}
+
+{% macro biIcon(name, attributes) -%}
+<i class="bi bi-{{ name }}" {{ attributes | safe}}></i>
+{%- endmacro %}
+
+{% macro readOnlyTable(display_data) -%}
+
+
+{# hack to get number of columns #}
+{% set col_num_hack = 'style="--num-columns:' + (display_data["column_names"] | length ) | string + ';"'
+%}
+
+<div class='custom-table-table' {{ col_num_hack | safe }}>
+    <div class='custom-table-thead'>
+
+        <div class='custom-table-tr'>
+            {% for column in display_data["column_names"] %}
+            <div class='custom-table-th' scope="col">
+                {{ util.convert_snake_case_to_readable(column) }}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class='custom-table-tbody'>
+        {% for row in display_data["result"] %}
+        <div class='custom-table-tr'>
+
+            {% for col_name in display_data["column_names"] %}
+            {% set entry_value = row[col_name] %}
+            <div class='custom-table-td'>
+                {{ entry_value }}
+            </div>
+
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+</div>
+
+
+{%- endmacro %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% block page %}
+{% endblock %}

@@ -19,6 +19,16 @@ CRUD_OPERATIONS_ICONS = {
 CRUD_OPERATIONS = CRUD_OPERATIONS_ICONS.keys()
 
 
+SET_OPERATIONS = {
+    "union": {
+        "name": "Union",
+        "icon": "union",
+        "query": "SELECT first_name FROM players \nUNION \nSELECT first_name FROM managers\n\nORDER BY first_name;",
+        "description": "Performs the set operation UNION on the two queries. This will return all unique first names from both tables.",
+    },
+}
+
+
 def get_crud_icon(operation):
     return CRUD_OPERATIONS_ICONS.get(operation, "exclamation-triangle-fill")
 

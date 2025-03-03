@@ -42,6 +42,20 @@ def render_crud(table):
     pass
 
 
+@app.route("/set-ops/<set_op>")
+def render_set_ops(set_op):
+
+    op_data = util.SET_OPERATIONS.get(set_op)
+    return render_template(
+        "set_ops.html",
+        data={"hello": "world"},
+        set_op=set_op,
+        set_op_data=op_data,
+        display_data=db.prep_query_for_display(query=op_data.get("query")),
+    )
+    pass
+
+
 # # # # # #
 # REQUEST COMMANDS
 # # # # # #
@@ -49,6 +63,7 @@ def render_crud(table):
 
 @app.route("/request/<command>", methods=["POST"])
 def perform_request(command):
+
     # grab data
     content = request.get_json(silent=True)
 

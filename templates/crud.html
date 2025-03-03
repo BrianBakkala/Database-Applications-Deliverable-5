@@ -24,7 +24,11 @@
 <div class='custom-table-td'>
     {% if col_data['extra'] == 'auto_increment' %}
     {# check if column is auto_increment #}
-    <span>{{ entry_value }}</span>
+    <input disabled type="text" auto-increment name="{{ col_name }}" value="{{ entry_value }}" class="form-control"
+        required>
+    <input disabled type="text" auto-increment name="{{ col_name }}" value="{{ entry_value }}" class="form-control"
+        required readonly />
+
     {% elif col_data['foreign_keys']|length > 0 %}
     {# check if column has foreign keys #}
     <select name="{{ col_name }}" id="input_{{ col_name }}" class="form-control" required>
@@ -69,7 +73,6 @@
         placeholder="{{ readable_column_name }}" min="0" required />
 
     {# handle decimal types with appropriate precision #}
-
     {% elif col_data['type'].startswith('decimal') %}
     {% set precision = col_data['type'].split('(')[1].split(')')[0] %}
     {% set x, y = precision.split(',') %}
@@ -82,7 +85,6 @@
         required />
 
     {% else %}
-    {{ col_data['type'] }}
     <input type="text" name="{{ col_name }}" value="{{ entry_value }}" class="form-control" id="input_{{ col_name }}"
         placeholder="{{ readable_column_name }}" required />
 
@@ -100,8 +102,11 @@
 {% block main %}
 <div class="container mb-5">
     <div class="row">
+        <h1> CRUD: {{ util.convert_table_to_plaintext(table) }} table</h1>
+    </div>
+
+    <div class="row">
         <div class="col-lg-12">
-            <h1> CRUD: {{ util.convert_table_to_plaintext(table) }}</h1>
 
             {# hack to get number of columns #}
             {% set col_num_hack = 'style="--num-columns:' + (columns_data | length + 1) | string + ';"'
@@ -157,15 +162,16 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
-    <div class="button-group col-lg-12">
-        <button type='button' class='btn btn-secondary' id='add-row' onclick='toggleCreateMode()'>
-            <i class='bi bi-plus-circle'></i>
-            <span>Add row</span>
-        </button>
+
+    <div class="row">
+        <div class="button-group col-lg-12">
+            <button type='button' class='btn btn-secondary' id='add-row' onclick='toggleCreateMode()'>
+                {{ biIcon("plus-circle") }}
+                <span>Add row</span>
+            </button>
+        </div>
     </div>
-</div>
+
 </div>
 {% endblock %}
 

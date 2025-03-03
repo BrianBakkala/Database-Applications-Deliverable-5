@@ -34,7 +34,7 @@ div {
         .crud-ops-button-group:hover,
         &:has(:hover) .crud-ops-button-group {
 
-            i.bi.main-button {
+            i.bi[main-button] {
                 opacity: 0.45;
 
                 &:hover {
@@ -55,11 +55,12 @@ div {
             z-index: 10;
             align-items: center;
             margin-right: 1rem;
+            background-color: transparent !important;
 
             i.bi {
                 cursor: pointer;
 
-                &.main-button {
+                &[main-button] {
                     opacity: 0;
 
                 }
@@ -73,13 +74,17 @@ div {
 
 form {
 
+    [auto-increment] {
+        font-style: italic;
+    }
+
     .delete-button-group,
     .edit-button-group {
-        i.bi.main-button {
+        i.bi[main-button] {
             display: initial;
         }
 
-        i.bi:not(.main-button) {
+        i.bi:not([main-button]) {
             display: none;
         }
     }
@@ -136,11 +141,11 @@ form {
 
         .edit-button-group {
 
-            i.bi.main-button {
+            i.bi[main-button] {
                 display: none;
             }
 
-            i.bi:not(.main-button) {
+            i.bi:not([main-button]) {
                 display: initial;
             }
         }
@@ -162,11 +167,11 @@ form {
 
         .delete-button-group {
 
-            i.bi.main-button {
+            i.bi[main-button] {
                 display: none;
             }
 
-            i.bi:not(.main-button) {
+            i.bi:not([main-button]) {
                 display: initial;
             }
         }

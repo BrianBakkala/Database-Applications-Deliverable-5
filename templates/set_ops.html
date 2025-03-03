@@ -1,0 +1,32 @@
+{% extends "base_template.html" %}
+
+
+{% block header %}
+{{ biIcon(set_op_data["icon"]) }} {{set_op_data["name"] }}
+{% endblock %}
+
+
+{% block main %}
+<div class="container mb-4">
+    <h5>Query</h5>
+    <codeblock>{{ set_op_data["query"] }}</codeblock>
+</div>
+<div class="container mb-4">
+    <h5>Description</h5>
+    <p>{{ set_op_data["description"] }}</p>
+</div>
+<div class="container mb-4">
+    <h5>Result:</h5>
+    <div class="container ">
+        {{ readOnlyTable(display_data) }}
+    </div>
+</div>
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="../static/css/set_ops.css">
+{% endblock %}
+
+{% block scripts %}
+<script src="../static/js/set_ops.js"></script>
+{% endblock %}

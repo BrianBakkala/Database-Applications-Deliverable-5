@@ -8,6 +8,25 @@
 <i class="bi bi-{{ name }}" {{ attributes | safe}}></i>
 {%- endmacro %}
 
+{% macro faIcon(name, attributes) -%}
+<i class="fa fa-{{ name }}" {{ attributes | safe}}></i>
+{%- endmacro %}
+
+{% macro verboseIcon(provider, name, attributes) -%}
+<i class="{{ provider }} {{ provider }}-{{ name }}" {{ attributes | safe}}></i>
+{%- endmacro %}
+
+
+{% macro icon(value, attributes) %}
+{% set parts = value.split('-', 1) %}
+{% if parts|length == 2 %}
+{{ verboseIcon(parts[0], parts[1], attributes) }}
+{% else %}
+<div>Error: Invalid icon format</div>
+{% endif %}
+{% endmacro %}
+
+
 {% macro readOnlyTable(display_data) -%}
 
 

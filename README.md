@@ -32,7 +32,8 @@ pip install -r requirements.txt
 ```
 python .\run.py
 ```
-5. Navigate to your desired page.
+5. Open http://127.0.0.1:8001/home/ in the browser.
+6. Navigate to your desired page.
 
 ## Tour
 ### Main

@@ -124,7 +124,7 @@ In these cases, this web app fetches data from the referenced table, and in doin
 
 
 ### List of queries
-The following queries are available to the user. Full descriptions and text for each query is available in [./resources/py/query_maps.py]()
+The following queries are available to the user. Full descriptions and text for each query is available in [resources/py/query_maps.py]()
 
 #### Advanced Functions
 - Average Margin of Victory

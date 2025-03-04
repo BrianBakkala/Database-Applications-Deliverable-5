@@ -3,10 +3,13 @@
 This web application allows users to explore and manage MLB baseball data. Users can look at players, managers, teams, stadiums, and statistics, and gain insights into player and team performance. The application has an easy-to use navigation bar, which lets users easily access the different queries and interfaces.  It also has an intuitive UI with full CRUD functionality.
 
 ## Stack
-Backend: Flask/Python
-Frontend: HTML, JS
-Front-frontend: CSS/SCSS, Bootstrap
-DB: MySQL
+**Backend:** Flask/Python
+
+**Frontend:** HTML, JS
+
+**Front-frontend:** CSS/SCSS, Bootstrap
+
+**DB:** MySQL
 
 ## Installation
 

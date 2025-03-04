@@ -3,7 +3,11 @@ const HIGHLIGHT_ROW_PARAM = "highlight_row";
 
 /////////////////////////
 //////////CRUD OPERATIONS
-/////////////////////////
+/**
+ * Sends a create request
+ *
+ * @param {*} table
+ */
 async function submitCreate(table)
 {
     await dbRequest('create',
@@ -14,6 +18,12 @@ async function submitCreate(table)
         () => { window.location.href = window.location.href.split("?")[0].split(",")[0] + "?" + HIGHLIGHT_ROW_PARAM + "=last"; });
 }
 
+/**
+ * Sends a delete request
+ *
+ * @param {*} table
+ * @param {*} recordId
+ */
 async function submitDelete(table, recordId)
 {
     await dbRequest('delete',
@@ -24,7 +34,14 @@ async function submitDelete(table, recordId)
         () => window.location.reload());
 
 }
-
+/**
+ * Sends an update request
+ *
+ * @param {*} clickedButton
+ * @param {*} table
+ * @param {*} recordId
+ * @return {*} 
+ */
 async function submitUpdate(clickedButton, table, recordId)
 {
 
@@ -52,7 +69,10 @@ async function submitUpdate(clickedButton, table, recordId)
         () => { window.location.href = window.location.href.split("?") + "?" + HIGHLIGHT_ROW_PARAM + "=" + recordId; }
     );
 }
-
+/**
+ * Fires when the page loads
+ *
+ */
 function onloadHandler()
 {
     const urlParams = getUrlParams();

@@ -24,6 +24,9 @@ CRUD_OPERATIONS = CRUD_OPERATIONS_ICONS.keys()
 
 
 def get_config():
+    """
+    Gets config file data
+    """
     with open("config.json", "r") as file:
         config = json.load(file)
         return config
@@ -53,14 +56,11 @@ def convert_to_table_name(plain_text):
     Falls back to a generic conversion if not found in the dictionary.
     """
     return PLAIN_TO_TABLE_MAPPINGS.get(plain_text, plain_text.lower().replace(" ", "_"))
-
-
-def hello_world_test():
-    return "HW!"
-
-
+ 
 def render_template_string_with_components_context(template_string, **components):
-
+    """
+    Renders a Jinja template with the context of the components in templates/_components.html
+    """
     new_str = (
         ' {% extends "_components.html" %}  {% block page %} '
         + template_string

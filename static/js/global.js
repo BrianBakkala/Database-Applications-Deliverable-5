@@ -58,6 +58,7 @@ async function dbRequest(command, object, callback)
             return r;
         });
 }
+
 /**
  * Grabs the data from a form element and serializes it into a JSON object
  *
@@ -69,6 +70,7 @@ function serializeForm(form)
     return Array.from(new FormData(form).entries())
         .reduce((data, [key, value]) => ({ ...data, [key]: value }), {});
 }
+
 /**
  * gets the url parameters and returns them as an object
  *
@@ -86,6 +88,7 @@ function getUrlParams()
 
     return paramsObject;
 }
+
 /**
  * removes a parameter from the url
  *

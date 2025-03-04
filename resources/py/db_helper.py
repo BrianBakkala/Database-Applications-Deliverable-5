@@ -16,6 +16,7 @@ class DBHelper:
             print(f"Error connecting to database: {e}")
             self.connection = None
 
+    # grab data for columns in a given table
     def get_columns_data(self, table):
 
         def process_columns_data(table_name, records, num_columns=2):
@@ -165,7 +166,6 @@ class DBHelper:
         except Error as e:
             if query_params is not None:
                 output = tuple(query_params.values())
-                print(f"Error reading records: {e}|{query}|{output}|||||||||")
                 return [
                     f"Error reading records: {e}",
                     query,

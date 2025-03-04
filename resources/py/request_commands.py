@@ -10,7 +10,6 @@ db = DBHelper(
     database=configuration["db"]["database"],
 )
 
-
 def create(obj):
     return db.create(table=obj["table"], data=obj["data"])
 

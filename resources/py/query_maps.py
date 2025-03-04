@@ -100,7 +100,7 @@ QUERY_MAPPINGS = {
         "icon": "bi-123",
         "query_type": "dynamic",
         "query": "WITH TeamHomeRuns AS (\r\n SELECT team_id, SUM(home_runs) AS total_home_runs \r\n FROM batting_statistics \r\n INNER JOIN players\r\n \tON players.player_id = batting_statistics.player_id\r\n WHERE season_id = ? \r\n GROUP BY team_id\r\n)\r\nSELECT t.team_name, thr.total_home_runs \r\nFROM teams t\r\nJOIN TeamHomeRuns thr ON t.team_id = thr.team_id\r\nORDER BY thr.total_home_runs DESC",
-        "column": "seasons.season_id",
+        "column": "batting_statistics.season_id",
         "description": "This ranks teams by total home runs in a given season.",
     },
     "highest_scoring_games": {
